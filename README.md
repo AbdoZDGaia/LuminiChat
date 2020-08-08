@@ -1,2 +1,3 @@
-# LuminiChat
-Chatting app using Flutter
+# Lumini Chat
+
+My complete chatting solution built using Flutter.
