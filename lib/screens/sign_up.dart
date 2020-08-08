@@ -134,21 +134,8 @@ class _SignUpState extends State<SignUp> {
                               ],
                             ),
                           ),
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Text(
-                                'Already have an account?',
-                                style: azSimpleTextStyle(
-                                  italic: false,
-                                  color: Colors.blueGrey,
-                                ),
-                              ),
-                            ),
-                          ),
                           SizedBox(
-                            height: 8.0,
+                            height: 20.0,
                           ),
                           GestureDetector(
                             onTap: () {
@@ -201,7 +188,7 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ),
                           SizedBox(
-                            height: 8.0,
+                            height: 20.0,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -209,7 +196,7 @@ class _SignUpState extends State<SignUp> {
                               Text(
                                 'Already have an account?',
                                 style: azSimpleTextStyle(
-                                  fontSize: 15,
+                                  fontSize: 13,
                                   color: Colors.blueGrey,
                                 ),
                               ),
@@ -219,7 +206,7 @@ class _SignUpState extends State<SignUp> {
                               Text(
                                 'Sign in now',
                                 style: azSimpleTextStyle(
-                                  fontSize: 16,
+                                  fontSize: 13,
                                   color: Colors.blueGrey,
                                   underlined: true,
                                 ),
