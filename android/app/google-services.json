@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "509468943274",
+    "firebase_url": "https://lumini-chat.firebaseio.com",
+    "project_id": "lumini-chat",
+    "storage_bucket": "lumini-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509468943274:android:a3bf8a6f4011d759d001d3",
+        "android_client_info": {
+          "package_name": "com.example.lumini_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509468943274-h0k867fksena81kv86b4tijoibb1ilo8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKD293iAg_5fGhnx7Y6XiiHVwwkh9V28Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509468943274-h0k867fksena81kv86b4tijoibb1ilo8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

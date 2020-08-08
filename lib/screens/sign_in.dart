@@ -13,14 +13,14 @@ class _SignInState extends State<SignIn> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      appBar: mainAppBar(context),
-      backgroundColor: Theme.of(context).primaryColor,
-      body: GestureDetector(
-        onTap: () {
-          return FocusScope.of(context).unfocus();
-        },
-        child: Padding(
+    return GestureDetector(
+      onTap: () {
+        return FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: mainAppBar(context),
+        backgroundColor: Theme.of(context).primaryColor,
+        body: Padding(
           padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
           child: Container(
             alignment: Alignment.bottomCenter,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lumini_chat/screens/sign_in.dart';
+import 'package:lumini_chat/screens/sign_up.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         accentColor: Color(0xfffaeecd),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SignIn(),
+      home: SignUp(),
     );
   }
 }
