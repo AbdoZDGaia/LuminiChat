@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lumini_chat/helper/authenticate.dart';
 import 'package:lumini_chat/services/auth.dart';
+import 'package:flutter/foundation.dart';
 
 Widget mainAppBar(
-    {BuildContext buildContext,
+    {@required BuildContext buildContext,
     bool logoutIconIncluded = false,
     double iconSize = 35}) {
   final double screenHeight = MediaQuery.of(buildContext).size.height;
@@ -25,6 +26,7 @@ Widget mainAppBar(
         child: Text(
           'Lumini Chat',
           style: TextStyle(
+            color: Theme.of(buildContext).accentColor,
             fontSize: 28.0,
             letterSpacing: 5,
             fontFamily: 'Lobster',
@@ -42,7 +44,10 @@ Widget mainAppBar(
                 right: screenWidth * 0.01,
               ),
               child: IconButton(
-                icon: Icon(Icons.exit_to_app),
+                icon: Icon(
+                  Icons.exit_to_app,
+                  color: Theme.of(buildContext).accentColor,
+                ),
                 onPressed: () {
                   authMethods.signOut();
                   return Navigator.pushReplacement(

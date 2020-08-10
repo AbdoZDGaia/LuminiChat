@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lumini_chat/screens/sign_in.dart';
-import 'package:lumini_chat/screens/sign_up.dart';
+import 'package:lumini_chat/screens/sign_in_screen.dart';
+import 'package:lumini_chat/screens/sign_up_screen.dart';
 
 class Authenticate extends StatefulWidget {
   @override

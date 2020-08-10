@@ -1,23 +1,31 @@
 import 'package:flutter/material.dart';
 
 InputDecoration azTextFieldInputDecoration(
-    {BuildContext buildContext,
+    {@required BuildContext buildContext,
     String hintText,
-    Color underlineColor = Colors.white}) {
-  return InputDecoration(
-    hintText: hintText,
-    hintStyle: TextStyle(color: Colors.grey),
-    focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: Theme.of(buildContext).primaryColor,
+    Color underlineColor = Colors.white,
+    bool disableBorder = false}) {
+  if (disableBorder)
+    return InputDecoration(
+      border: InputBorder.none,
+      hintText: hintText,
+      hintStyle: TextStyle(color: Colors.grey),
+    );
+  else
+    return InputDecoration(
+      hintText: hintText,
+      hintStyle: TextStyle(color: Colors.grey),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Theme.of(buildContext).primaryColor,
+        ),
       ),
-    ),
-    enabledBorder: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: underlineColor,
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: underlineColor,
+        ),
       ),
-    ),
-  );
+    );
 }
 
 TextStyle azSimpleTextStyle(
