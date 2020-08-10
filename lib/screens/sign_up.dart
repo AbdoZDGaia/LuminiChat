@@ -5,6 +5,8 @@ import 'package:lumini_chat/widgets/AZWidgets.dart';
 import 'package:lumini_chat/widgets/main_appbar.dart';
 
 class SignUp extends StatefulWidget {
+  final Function toggle;
+  SignUp({this.toggle});
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -29,8 +31,6 @@ class _SignUpState extends State<SignUp> {
           .signUpWithEmailAndPassword(emailTextEditingController.text,
               passwordTextEditingController.text)
           .then((value) {
-        print('{$value.uid}');
-
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => ChatRoom()));
       });
@@ -54,7 +54,7 @@ class _SignUpState extends State<SignUp> {
               ),
             )
           : Scaffold(
-              appBar: mainAppBar(context),
+              appBar: mainAppBar(buildContext: context),
               backgroundColor: Theme.of(context).primaryColor,
               body: Padding(
                 padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
@@ -119,7 +119,7 @@ class _SignUpState extends State<SignUp> {
                                 TextFormField(
                                   obscureText: true,
                                   validator: (val) {
-                                    return val.length >= 6
+                                    return (val.length < 6)
                                         ? null
                                         : "Password must at least be 6 digits/letters";
                                   },
@@ -196,19 +196,29 @@ class _SignUpState extends State<SignUp> {
                               Text(
                                 'Already have an account?',
                                 style: azSimpleTextStyle(
-                                  fontSize: 13,
+                                  fontSize: 15,
                                   color: Colors.blueGrey,
                                 ),
                               ),
                               SizedBox(
                                 width: 6,
                               ),
-                              Text(
-                                'Sign in now',
-                                style: azSimpleTextStyle(
-                                  fontSize: 13,
-                                  color: Colors.blueGrey,
-                                  underlined: true,
+                              GestureDetector(
+                                onTap: () {
+                                  widget.toggle();
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                  ),
+                                  child: Text(
+                                    'Sign in now',
+                                    style: azSimpleTextStyle(
+                                      fontSize: 17,
+                                      color: Colors.blueGrey,
+                                      underlined: true,
+                                    ),
+                                  ),
                                 ),
                               )
                             ],
