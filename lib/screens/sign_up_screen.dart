@@ -221,12 +221,12 @@ class _SignUpState extends State<SignUp> {
                                 'Already have an account?',
                                 style: azSimpleTextStyle(
                                   buildContext: context,
-                                  fontSize: 15,
+                                  fontSize: screenWidth*0.037,
                                   color: Colors.blueGrey,
                                 ),
                               ),
                               SizedBox(
-                                width: 6,
+                                width: screenWidth*0.01,
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -234,13 +234,13 @@ class _SignUpState extends State<SignUp> {
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
-                                    vertical: 8.0,
+                                    vertical: screenWidth*0.02,
                                   ),
                                   child: Text(
                                     'Sign in now',
                                     style: azSimpleTextStyle(
                                       buildContext: context,
-                                      fontSize: 17,
+                                      fontSize: screenWidth*0.04,
                                       color: Colors.blueGrey,
                                       underlined: true,
                                     ),

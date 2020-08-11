@@ -100,6 +100,7 @@ class _SignInState extends State<SignIn> {
                                   ),
                                 ),
                                 TextFormField(
+                                  obscureText: true,
                                   validator: (val) {
                                     return (val.length < 6)
                                         ? "Password must at least be 6 digits/letters"
@@ -195,7 +196,7 @@ class _SignInState extends State<SignIn> {
                                 'Haven\'t signed up yet?',
                                 style: azSimpleTextStyle(
                                   buildContext: context,
-                                  fontSize: 15,
+                                  fontSize: screenWidth*0.04,
                                   color: Colors.blueGrey,
                                 ),
                               ),
@@ -212,7 +213,7 @@ class _SignInState extends State<SignIn> {
                                     'Sign up now',
                                     style: azSimpleTextStyle(
                                       buildContext: context,
-                                      fontSize: 17,
+                                      fontSize: screenWidth*0.045,
                                       color: Colors.blueGrey,
                                       underlined: true,
                                     ),
