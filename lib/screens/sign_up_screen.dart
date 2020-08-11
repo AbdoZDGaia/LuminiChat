@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lumini_chat/screens/chats_screen.dart';
 import 'package:lumini_chat/services/auth.dart';
+import 'package:lumini_chat/services/database.dart';
 import 'package:lumini_chat/widgets/AZWidgets.dart';
 import 'package:lumini_chat/widgets/main_appbar.dart';
 
@@ -21,16 +22,34 @@ class _SignUpState extends State<SignUp> {
   TextEditingController passwordTextEditingController =
       new TextEditingController();
   final formKey = GlobalKey<FormState>();
+  DatabaseMethods databaseMethods = new DatabaseMethods();
 
   signMeUp() {
+    String passHash = passwordTextEditingController.text;
+    String email = emailTextEditingController.text;
+    String username = userNameTextEditingController.text;
+    List<String> userSplitList = username.split(" ");
+    List<String> userIndexList = [];
+
+    for (int i = 0; i < userSplitList.length; i++) {
+      for (int y = 1; y < userSplitList[i].length + 1; y++) {
+        userIndexList.add(userSplitList[i].substring(0, y).toLowerCase());
+      }
+    }
+
+    Map<String, dynamic> userMap = {
+      "email": email,
+      "passHash": passHash,
+      "username": username,
+      "searchIndex": userIndexList,
+    };
+
     if (formKey.currentState.validate()) {
       setState(() {
         isLoading = true;
       });
-      authMethods
-          .signUpWithEmailAndPassword(emailTextEditingController.text,
-              passwordTextEditingController.text)
-          .then((value) {
+      authMethods.signUpWithEmailAndPassword(email, passHash).then((value) {
+        databaseMethods.uploadUserInfo(userMap);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => ChatRoom()));
       });
@@ -90,7 +109,8 @@ class _SignUpState extends State<SignUp> {
                                         : null;
                                   },
                                   controller: userNameTextEditingController,
-                                  style: azSimpleTextStyle(italic: true),
+                                  style: azSimpleTextStyle(
+                                      buildContext: context, italic: true),
                                   decoration: azTextFieldInputDecoration(
                                     underlineColor: Colors.grey,
                                     buildContext: context,
@@ -109,7 +129,8 @@ class _SignUpState extends State<SignUp> {
                                         : 'Please enter a valid Email';
                                   },
                                   controller: emailTextEditingController,
-                                  style: azSimpleTextStyle(italic: true),
+                                  style: azSimpleTextStyle(
+                                      buildContext: context, italic: true),
                                   decoration: azTextFieldInputDecoration(
                                     underlineColor: Colors.grey,
                                     buildContext: context,
@@ -119,12 +140,13 @@ class _SignUpState extends State<SignUp> {
                                 TextFormField(
                                   obscureText: true,
                                   validator: (val) {
-                                    return (val.length < 6)
+                                    return (val.length >= 6)
                                         ? null
                                         : "Password must at least be 6 digits/letters";
                                   },
                                   controller: passwordTextEditingController,
-                                  style: azSimpleTextStyle(italic: true),
+                                  style: azSimpleTextStyle(
+                                      buildContext: context, italic: true),
                                   decoration: azTextFieldInputDecoration(
                                     underlineColor: Colors.grey,
                                     buildContext: context,
@@ -157,6 +179,7 @@ class _SignUpState extends State<SignUp> {
                               child: Text(
                                 'Sign up',
                                 style: azSimpleTextStyle(
+                                  buildContext: context,
                                   fontSize: 18,
                                   color: Theme.of(context).accentColor,
                                 ),
@@ -182,6 +205,7 @@ class _SignUpState extends State<SignUp> {
                             child: Text(
                               'Sign up with Google',
                               style: azSimpleTextStyle(
+                                buildContext: context,
                                 fontSize: 18,
                                 color: Theme.of(context).accentColor,
                               ),
@@ -196,6 +220,7 @@ class _SignUpState extends State<SignUp> {
                               Text(
                                 'Already have an account?',
                                 style: azSimpleTextStyle(
+                                  buildContext: context,
                                   fontSize: 15,
                                   color: Colors.blueGrey,
                                 ),
@@ -214,6 +239,7 @@ class _SignUpState extends State<SignUp> {
                                   child: Text(
                                     'Sign in now',
                                     style: azSimpleTextStyle(
+                                      buildContext: context,
                                       fontSize: 17,
                                       color: Colors.blueGrey,
                                       underlined: true,

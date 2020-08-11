@@ -29,7 +29,8 @@ InputDecoration azTextFieldInputDecoration(
 }
 
 TextStyle azSimpleTextStyle(
-    {Color color = Colors.black,
+    {@required BuildContext buildContext,
+    Color color = Colors.black,
     bool italic = false,
     double fontSize = 16,
     bool underlined = false}) {
@@ -37,7 +38,9 @@ TextStyle azSimpleTextStyle(
     color: color,
     fontWeight: FontWeight.bold,
     fontStyle: italic ? FontStyle.italic : FontStyle.normal,
-    fontSize: fontSize != 16 ? fontSize : 16,
+    fontSize: fontSize != MediaQuery.of(buildContext).size.width * 0.02
+        ? fontSize
+        : MediaQuery.of(buildContext).size.width * 0.02,
     decoration: underlined ? TextDecoration.underline : TextDecoration.none,
   );
 }

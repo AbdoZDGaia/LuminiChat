@@ -91,7 +91,8 @@ class _SignInState extends State<SignIn> {
                                         : 'Please enter a valid Email';
                                   },
                                   controller: emailTextEditingController,
-                                  style: azSimpleTextStyle(italic: true),
+                                  style: azSimpleTextStyle(
+                                      buildContext: context, italic: true),
                                   decoration: azTextFieldInputDecoration(
                                     underlineColor: Colors.grey,
                                     buildContext: context,
@@ -105,7 +106,8 @@ class _SignInState extends State<SignIn> {
                                         : null;
                                   },
                                   controller: passwordTextEditingController,
-                                  style: azSimpleTextStyle(italic: true),
+                                  style: azSimpleTextStyle(
+                                      buildContext: context, italic: true),
                                   decoration: azTextFieldInputDecoration(
                                     underlineColor: Colors.grey,
                                     buildContext: context,
@@ -125,6 +127,7 @@ class _SignInState extends State<SignIn> {
                             child: Text(
                               'Forgot Password?',
                               style: azSimpleTextStyle(
+                                buildContext: context,
                                 italic: false,
                                 color: Colors.blueGrey,
                               ),
@@ -150,6 +153,7 @@ class _SignInState extends State<SignIn> {
                               child: Text(
                                 'Sign in',
                                 style: azSimpleTextStyle(
+                                  buildContext: context,
                                   fontSize: 18,
                                   color: Theme.of(context).accentColor,
                                 ),
@@ -175,6 +179,7 @@ class _SignInState extends State<SignIn> {
                             child: Text(
                               'Sign in with Google',
                               style: azSimpleTextStyle(
+                                buildContext: context,
                                 fontSize: 18,
                                 color: Theme.of(context).accentColor,
                               ),
@@ -189,6 +194,7 @@ class _SignInState extends State<SignIn> {
                               Text(
                                 'Haven\'t signed up yet?',
                                 style: azSimpleTextStyle(
+                                  buildContext: context,
                                   fontSize: 15,
                                   color: Colors.blueGrey,
                                 ),
@@ -205,6 +211,7 @@ class _SignInState extends State<SignIn> {
                                   child: Text(
                                     'Sign up now',
                                     style: azSimpleTextStyle(
+                                      buildContext: context,
                                       fontSize: 17,
                                       color: Colors.blueGrey,
                                       underlined: true,
