@@ -69,28 +69,32 @@ class _IntroScreenState extends State<IntroScreen> {
                 SizedBox(height: screenHeight * 0.05),
                 Container(
                   alignment: Alignment.centerRight,
-                  child: RaisedButton(
-                    color: Theme.of(context).accentColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        topLeft: Radius.circular(20),
-                      ),
-                    ),
-                    padding: EdgeInsets.all(0),
-                    elevation: 10,
-                    onPressed: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) {
-                        return Authenticate();
-                      }));
-                    },
-                    child: Text(
-                      'Skip',
-                      style: azSimpleTextStyle(
-                          buildContext: context, color: Colors.red),
-                    ),
-                  ),
+                  child: _currentPage == _numberOfPages - 1
+                      ? Text('')
+                      : RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              topLeft: Radius.circular(20),
+                            ),
+                          ),
+                          padding: EdgeInsets.all(0),
+                          elevation: 10,
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return Authenticate();
+                              }),
+                            );
+                          },
+                          child: Text(
+                            'Skip',
+                            style: azSimpleTextStyle(
+                                buildContext: context, color: Colors.red),
+                          ),
+                        ),
                 ),
                 Container(
                   height: screenHeight * 0.78,
@@ -153,25 +157,34 @@ class _IntroScreenState extends State<IntroScreen> {
       ),
       bottomSheet: _currentPage == _numberOfPages - 1
           ? Container(
-              height: screenHeight * 0.1,
-              width: double.infinity,
-              color: Color(0xfffff0bc),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return Authenticate();
-                  }));
-                },
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 15.0),
-                    child: Text(
-                      'Get Started',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+              color: Colors.red,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xfffff0bc),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                height: screenHeight * 0.1,
+                width: double.infinity,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) {
+                      return Authenticate();
+                    }));
+                  },
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: screenHeight * 0.01),
+                      child: Text(
+                        'Get Started',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: screenHeight * 0.035,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

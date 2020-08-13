@@ -25,7 +25,7 @@ class SecondLandingScreen extends StatelessWidget {
             height: 30,
           ),
           Text(
-            'Stay Connected, Stay Safe!',
+            'Stay Secure!',
             style: azTitleStyle(
               buildContext: context,
               color: Theme.of(context).accentColor,
@@ -35,7 +35,7 @@ class SecondLandingScreen extends StatelessWidget {
             height: 15,
           ),
           Text(
-            'Privacy is guaranteed.\n Stay connected away from prying eyes.',
+            'Privacy is guaranteed.\nStay connected away from prying eyes.',
             style: azSimpleTextStyle(
               buildContext: context,
               color: Theme.of(context).accentColor,

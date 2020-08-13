@@ -34,7 +34,7 @@ class FirstLandingScreen extends StatelessWidget {
             height: 15,
           ),
           Text(
-            'Privacy is our goal, a must that everyone should have',
+            'Privacy is our goal, a must that everyone should have.',
             style: azSimpleTextStyle(
               buildContext: context,
               color: Theme.of(context).accentColor,

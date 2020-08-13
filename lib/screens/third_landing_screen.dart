@@ -25,7 +25,7 @@ class ThirdLandingScreen extends StatelessWidget {
             height: 30,
           ),
           Text(
-            'For choosing Lumini Chat',
+            'Thank You For Choosing Lumini Chat',
             style: azTitleStyle(
               buildContext: context,
               color: Theme.of(context).accentColor,
@@ -35,7 +35,7 @@ class ThirdLandingScreen extends StatelessWidget {
             height: 15,
           ),
           Text(
-            'Stay tuned to our latest updates.\nStay secure!',
+            'Stay tuned for our latest updates.\nStay secure!',
             style: azSimpleTextStyle(
               buildContext: context,
               color: Theme.of(context).accentColor,

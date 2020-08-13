@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lumini_chat/helper/authenticate.dart';
+import 'package:lumini_chat/helper/helper_methods.dart';
 import 'package:lumini_chat/services/auth.dart';
 import 'package:flutter/foundation.dart';
 
@@ -50,6 +51,7 @@ Widget mainAppBar(
                 ),
                 onPressed: () {
                   authMethods.signOut();
+                  HelperFunctions.setIsUserLoggedInSharedPreferences(false);
                   return Navigator.pushReplacement(
                       buildContext,
                       MaterialPageRoute(

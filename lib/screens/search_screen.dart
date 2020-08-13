@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lumini_chat/helper/constants.dart';
-import 'package:lumini_chat/helper/helper_methods.dart';
 import 'package:lumini_chat/screens/conversation_screen.dart';
 import 'package:lumini_chat/services/database.dart';
 import 'package:lumini_chat/widgets/AZWidgets.dart';
@@ -218,6 +217,7 @@ class _SearchState extends State<Search> {
                     color: Theme.of(context).accentColor,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
+                      bottomLeft: Radius.circular(30),
                     ),
                   ),
                   child: Column(
