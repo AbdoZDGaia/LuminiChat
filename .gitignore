@@ -44,3 +44,5 @@ app.*.map.json
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 lib/utilities/keys.dart
+android/key.properties
+android/app/key.jks

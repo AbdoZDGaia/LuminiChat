@@ -1,4 +1,4 @@
-package com.example.lumini_chat
+package com.luminance.lumini_chat
 
 import io.flutter.embedding.android.FlutterActivity
 

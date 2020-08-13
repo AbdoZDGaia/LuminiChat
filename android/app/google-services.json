@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:509468943274:android:a3bf8a6f4011d759d001d3",
+        "mobilesdk_app_id": "1:509468943274:android:dbe2ae2d37e48be8d001d3",
         "android_client_info": {
-          "package_name": "com.example.lumini_chat"
+          "package_name": "com.luminance.lumini_chat"
         }
       },
       "oauth_client": [
@@ -21,7 +21,7 @@
       ],
       "api_key": [
         {
-          "current_key": ""
+          "current_key": "AIzaSyAKD293iAg_5fGhnx7Y6XiiHVwwkh9V28Y"
         }
       ],
       "services": {
@@ -30,6 +30,13 @@
             {
               "client_id": "509468943274-h0k867fksena81kv86b4tijoibb1ilo8.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "509468943274-j6mgadb4s4ekt6lri25sjrqa9vh5p9b5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.luminiChat"
+              }
             }
           ]
         }
