@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lumini_chat/helper/constants.dart';
+import 'package:lumini_chat/helper/helper_methods.dart';
+import 'package:lumini_chat/screens/conversation_screen.dart';
 import 'package:lumini_chat/services/database.dart';
 import 'package:lumini_chat/widgets/AZWidgets.dart';
 import 'package:strings/strings.dart';
@@ -8,6 +11,8 @@ class Search extends StatefulWidget {
   @override
   _SearchState createState() => _SearchState();
 }
+
+String currentUser = Constants.currentUser;
 
 class _SearchState extends State<Search> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
@@ -25,28 +30,133 @@ class _SearchState extends State<Search> {
     });
   }
 
-  @override
-  void initState() {
-    initiateSearch();
-    super.initState();
-  }
-
-  createChatRoomAndStartConversation(String username) {}
-
   Widget userListView() {
     return userSnapshot != null
         ? ListView.builder(
             shrinkWrap: true,
             itemCount: userSnapshot.documents.length,
             itemBuilder: (BuildContext context, int index) {
-              return SearchTile(
-                userEmailLabel: userSnapshot.documents[index].data["email"],
-                usernameLabel: capitalize(
-                    userSnapshot.documents[index].data["username"].toString()),
+              String username =
+                  userSnapshot.documents[index].data["username"].toString();
+              String email = userSnapshot.documents[index].data["email"];
+              return searchTile(
+                buildContext: context,
+                userEmailLabel: email,
+                usernameLabel: username,
               );
             },
           )
         : Container();
+  }
+
+  createChatRoomAndStartConversation({String userName}) {
+    String chatRoomId = getChatRoomId(userName, currentUser);
+    List<String> users = [userName, currentUser];
+    Map<String, dynamic> chatroomMap = {
+      "users": users,
+      "chatRoomId": chatRoomId
+    };
+
+    if (userName != currentUser) {
+      DatabaseMethods().createChatRoom(chatRoomId, chatroomMap);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => ConversationScreen()));
+    } else {
+      print("Nope!!!");
+    }
+  }
+
+  Widget searchTile(
+      {BuildContext buildContext,
+      String usernameLabel,
+      String userEmailLabel}) {
+    final double screenHeight = MediaQuery.of(buildContext).size.height;
+    final double screenWidth = MediaQuery.of(buildContext).size.width;
+
+    return Padding(
+      padding: EdgeInsets.only(
+        top: screenWidth * 0.02,
+        bottom: screenWidth * 0.02,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+        ),
+        padding: EdgeInsets.symmetric(
+            vertical: screenHeight * 0.03, horizontal: screenWidth * 0.04),
+        height: screenHeight * 0.135,
+        alignment: Alignment.topRight,
+        child: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(
+                width: screenWidth * 0.02,
+              ),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                      width: screenWidth * 0.5,
+                      child: Text(
+                        capitalize(usernameLabel),
+                        style: azSimpleTextStyle(
+                          buildContext: context,
+                          color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Container(
+                      width: screenWidth * 0.5,
+                      child: Text(
+                        userEmailLabel,
+                        style: azSimpleTextStyle(
+                          buildContext: context,
+                          color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: screenWidth * 0.03),
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: BorderSide(color: Theme.of(context).primaryColor)),
+                  onPressed: () {
+                    createChatRoomAndStartConversation(
+                      userName: usernameLabel,
+                    );
+                  },
+                  color: Theme.of(context).primaryColor,
+                  child: Text("Message".toUpperCase(),
+                      style: azSimpleTextStyle(
+                        buildContext: context,
+                        color: Theme.of(context).accentColor,
+                      )),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    initiateSearch();
+    super.initState();
   }
 
   @override
@@ -219,90 +329,10 @@ class _SearchState extends State<Search> {
   }
 }
 
-class SearchTile extends StatelessWidget {
-  final String usernameLabel;
-  final String userEmailLabel;
-
-  SearchTile({this.userEmailLabel, this.usernameLabel});
-
-  @override
-  Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-
-    return Padding(
-      padding: EdgeInsets.only(
-        top: screenWidth * 0.02,
-        bottom: screenWidth * 0.02,
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
-        ),
-        padding: EdgeInsets.symmetric(
-            vertical: screenHeight * 0.03, horizontal: screenWidth * 0.04),
-        height: screenHeight * 0.135,
-        alignment: Alignment.topRight,
-        child: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              SizedBox(
-                width: screenWidth * 0.02,
-              ),
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      width: screenWidth * 0.5,
-                      child: Text(
-                        usernameLabel,
-                        style: azSimpleTextStyle(
-                          buildContext: context,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Container(
-                      width: screenWidth * 0.5,
-                      child: Text(
-                        userEmailLabel,
-                        style: azSimpleTextStyle(
-                          buildContext: context,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: screenWidth * 0.03),
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Theme.of(context).primaryColor)),
-                  onPressed: () {},
-                  color: Theme.of(context).primaryColor,
-                  child: Text("Message".toUpperCase(),
-                      style: azSimpleTextStyle(
-                        buildContext: context,
-                        color: Theme.of(context).accentColor,
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+getChatRoomId(String a, String b) {
+  if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
+    return "$b\_$a";
+  } else {
+    return "$a\_$b";
   }
 }

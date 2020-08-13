@@ -1,12 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:lumini_chat/helper/authenticate.dart';
+import 'package:lumini_chat/helper/helper_methods.dart';
+import 'package:lumini_chat/screens/chats_screen.dart';
+import 'package:lumini_chat/screens/intro_screen.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool isLoggedIn;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  getLoggedInState() async {
+    await HelperFunctions.getIsUserLoggedInSharedPreferences().then((value) {
+      setState(() {
+        isLoggedIn = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,7 +39,9 @@ class MyApp extends StatelessWidget {
         accentColor: Color(0xfffaeecd),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Authenticate(),
+      home: isLoggedIn != null
+          ? isLoggedIn ? ChatRoom() : Authenticate()
+          : IntroScreen(),
     );
   }
 }

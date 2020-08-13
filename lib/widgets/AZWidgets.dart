@@ -44,3 +44,22 @@ TextStyle azSimpleTextStyle(
     decoration: underlined ? TextDecoration.underline : TextDecoration.none,
   );
 }
+
+TextStyle azTitleStyle(
+    {@required BuildContext buildContext,
+    Color color = Colors.black,
+    bool italic = false,
+    double fontSize = 26.0,
+    double height = 1.5,
+    bool underlined = false}) {
+  return TextStyle(
+    color: color,
+    // fontFamily: 'CM Sans Serif',
+    fontFamily: 'BalooDa2',
+    fontSize: fontSize,
+    fontStyle: italic ? FontStyle.italic : FontStyle.normal,
+    fontWeight: FontWeight.bold,
+    height: height,
+    decoration: underlined ? TextDecoration.underline : TextDecoration.none,
+  );
+}
