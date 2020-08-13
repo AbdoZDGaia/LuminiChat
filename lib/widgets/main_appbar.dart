@@ -14,6 +14,10 @@ Widget mainAppBar(
   AuthMethods authMethods = new AuthMethods();
 
   return AppBar(
+    iconTheme: new IconThemeData(
+      color: Theme.of(buildContext).accentColor,
+      size: iconSize
+    ),
     elevation: 0.0,
     centerTitle: false,
     title: Padding(

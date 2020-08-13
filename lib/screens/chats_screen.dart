@@ -4,6 +4,7 @@ import 'package:lumini_chat/helper/helper_methods.dart';
 import 'package:lumini_chat/screens/search_screen.dart';
 import 'package:lumini_chat/services/auth.dart';
 import 'package:lumini_chat/widgets/main_appbar.dart';
+import 'package:lumini_chat/widgets/main_appdrawer.dart';
 
 class ChatRoom extends StatefulWidget {
   @override
@@ -31,6 +32,7 @@ class _ChatRoomState extends State<ChatRoom> {
         buildContext: context,
         logoutIconIncluded: true,
       ),
+      drawer: MainDrawer(),
       backgroundColor: Theme.of(context).primaryColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
