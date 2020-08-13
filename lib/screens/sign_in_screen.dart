@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lumini_chat/helper/helper_methods.dart';
 import 'package:lumini_chat/screens/chats_screen.dart';
 import 'package:lumini_chat/services/auth.dart';
+import 'package:lumini_chat/services/database.dart';
 import 'package:lumini_chat/widgets/AZWidgets.dart';
 import 'package:lumini_chat/widgets/main_appbar.dart';
 
@@ -14,6 +17,8 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   bool isLoading = false;
   AuthMethods authMethods = new AuthMethods();
+  DatabaseMethods databaseMethods = new DatabaseMethods();
+
   TextEditingController emailTextEditingController =
       new TextEditingController();
   TextEditingController passwordTextEditingController =
@@ -21,16 +26,28 @@ class _SignInState extends State<SignIn> {
   final formKey = GlobalKey<FormState>();
 
   void signMeInWithEmailAndPass() {
+    String passHash = passwordTextEditingController.text;
+    String email = emailTextEditingController.text;
+    QuerySnapshot userSnapshot;
+
     if (formKey.currentState.validate()) {
       setState(() {
         isLoading = true;
       });
 
-      authMethods.signInWithEmailAndPassword(
-          emailTextEditingController.text, passwordTextEditingController.text);
-
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => ChatRoom()));
+      authMethods.signInWithEmailAndPassword(email, passHash).then((val) {
+        if (val != null) {
+          databaseMethods.getUserByUserEmail(email).then((val) {
+            userSnapshot = val;
+            HelperFunctions.setLoggedInUserNameSharePreferences(
+                userSnapshot.documents[0].data["username"]);
+          });
+          HelperFunctions.setLoggedInUserEmailSharePreferences(email);
+          HelperFunctions.setIsUserLoggedInSharedPreferences(true);
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => ChatRoom()));
+        }
+      });
     }
   }
 
@@ -196,7 +213,7 @@ class _SignInState extends State<SignIn> {
                                 'Haven\'t signed up yet?',
                                 style: azSimpleTextStyle(
                                   buildContext: context,
-                                  fontSize: screenWidth*0.04,
+                                  fontSize: screenWidth * 0.04,
                                   color: Colors.blueGrey,
                                 ),
                               ),
@@ -213,7 +230,7 @@ class _SignInState extends State<SignIn> {
                                     'Sign up now',
                                     style: azSimpleTextStyle(
                                       buildContext: context,
-                                      fontSize: screenWidth*0.045,
+                                      fontSize: screenWidth * 0.045,
                                       color: Colors.blueGrey,
                                       underlined: true,
                                     ),

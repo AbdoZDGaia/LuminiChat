@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lumini_chat/services/database.dart';
 import 'package:lumini_chat/widgets/AZWidgets.dart';
+import 'package:strings/strings.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -10,13 +11,13 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
-  TextEditingController searchByUsernameTextEditingController =
+  TextEditingController searchByUserEmailTextEditingController =
       new TextEditingController();
   QuerySnapshot userSnapshot;
 
   initiateSearch() {
     databaseMethods
-        .getUserByUsername(searchByUsernameTextEditingController.text)
+        .getUserByUserEmail(searchByUserEmailTextEditingController.text)
         .then((val) {
       setState(() {
         userSnapshot = val;
@@ -30,6 +31,8 @@ class _SearchState extends State<Search> {
     super.initState();
   }
 
+  createChatRoomAndStartConversation(String username) {}
+
   Widget userListView() {
     return userSnapshot != null
         ? ListView.builder(
@@ -38,7 +41,8 @@ class _SearchState extends State<Search> {
             itemBuilder: (BuildContext context, int index) {
               return SearchTile(
                 userEmailLabel: userSnapshot.documents[index].data["email"],
-                usernameLabel: userSnapshot.documents[index].data["username"],
+                usernameLabel: capitalize(
+                    userSnapshot.documents[index].data["username"].toString()),
               );
             },
           )
@@ -138,7 +142,7 @@ class _SearchState extends State<Search> {
                               Expanded(
                                 child: TextField(
                                   controller:
-                                      searchByUsernameTextEditingController,
+                                      searchByUserEmailTextEditingController,
                                   decoration: azTextFieldInputDecoration(
                                     // hintText: 'Search by username',
                                     hintText: 'Search by email',
@@ -160,7 +164,7 @@ class _SearchState extends State<Search> {
                                         .accentColor, // inkwell color
                                     child: SizedBox(
                                       width: screenWidth * 0.12,
-                                      height: screenHeight * 0.07,
+                                      height: screenWidth * 0.12,
                                       child: Icon(
                                         Icons.search,
                                         color: Theme.of(context).accentColor,
@@ -239,51 +243,40 @@ class SearchTile extends StatelessWidget {
             bottomRight: Radius.circular(30),
           ),
         ),
-        padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+        padding: EdgeInsets.symmetric(
+            vertical: screenHeight * 0.03, horizontal: screenWidth * 0.04),
         height: screenHeight * 0.135,
         alignment: Alignment.topRight,
         child: Container(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              SizedBox(width: screenWidth * 0.02),
+              SizedBox(
+                width: screenWidth * 0.02,
+              ),
               Container(
-                alignment: Alignment.centerLeft,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.max,
                   children: [
                     Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(30)),
-                      width: screenWidth * 0.55,
-                      padding: EdgeInsets.symmetric(
-                          vertical: screenHeight * 0.005,
-                          horizontal: screenWidth * 0.03),
+                      width: screenWidth * 0.5,
                       child: Text(
                         usernameLabel,
                         style: azSimpleTextStyle(
                           buildContext: context,
-                          color: Theme.of(context).accentColor,
+                          color: Colors.black,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.015),
                     Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(30)),
-                      width: screenWidth * 0.55,
-                      padding: EdgeInsets.symmetric(
-                          vertical: screenHeight * 0.005,
-                          horizontal: screenWidth * 0.03),
+                      width: screenWidth * 0.5,
                       child: Text(
                         userEmailLabel,
                         style: azSimpleTextStyle(
                           buildContext: context,
-                          color: Theme.of(context).accentColor,
+                          color: Colors.black,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -292,7 +285,7 @@ class SearchTile extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: screenWidth * 0.02),
+                padding: EdgeInsets.only(left: screenWidth * 0.03),
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
@@ -301,7 +294,9 @@ class SearchTile extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                   child: Text("Message".toUpperCase(),
                       style: azSimpleTextStyle(
-                          buildContext: context, color: Theme.of(context).accentColor)),
+                        buildContext: context,
+                        color: Theme.of(context).accentColor,
+                      )),
                 ),
               ),
             ],

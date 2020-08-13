@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lumini_chat/helper/helper_methods.dart';
 import 'package:lumini_chat/screens/chats_screen.dart';
 import 'package:lumini_chat/services/auth.dart';
 import 'package:lumini_chat/services/database.dart';
@@ -38,11 +39,13 @@ class _SignUpState extends State<SignUp> {
     }
 
     Map<String, dynamic> userMap = {
-      "email": email,
+      "email": email.toLowerCase(),
       "passHash": passHash,
       "username": username,
       "searchIndex": userIndexList,
     };
+    HelperFunctions.setLoggedInUserEmailSharePreferences(email);
+    HelperFunctions.setLoggedInUserNameSharePreferences(username);
 
     if (formKey.currentState.validate()) {
       setState(() {
@@ -50,6 +53,7 @@ class _SignUpState extends State<SignUp> {
       });
       authMethods.signUpWithEmailAndPassword(email, passHash).then((value) {
         databaseMethods.uploadUserInfo(userMap);
+        HelperFunctions.setIsUserLoggedInSharedPreferences(true);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => ChatRoom()));
       });
@@ -221,12 +225,12 @@ class _SignUpState extends State<SignUp> {
                                 'Already have an account?',
                                 style: azSimpleTextStyle(
                                   buildContext: context,
-                                  fontSize: screenWidth*0.037,
+                                  fontSize: screenWidth * 0.037,
                                   color: Colors.blueGrey,
                                 ),
                               ),
                               SizedBox(
-                                width: screenWidth*0.01,
+                                width: screenWidth * 0.01,
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -234,13 +238,13 @@ class _SignUpState extends State<SignUp> {
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
-                                    vertical: screenWidth*0.02,
+                                    vertical: screenWidth * 0.02,
                                   ),
                                   child: Text(
                                     'Sign in now',
                                     style: azSimpleTextStyle(
                                       buildContext: context,
-                                      fontSize: screenWidth*0.04,
+                                      fontSize: screenWidth * 0.04,
                                       color: Colors.blueGrey,
                                       underlined: true,
                                     ),
