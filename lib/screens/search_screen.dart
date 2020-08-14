@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lumini_chat/helper/constants.dart';
+import 'package:lumini_chat/helper/helper_methods.dart';
 import 'package:lumini_chat/screens/conversation_screen.dart';
 import 'package:lumini_chat/services/database.dart';
 import 'package:lumini_chat/widgets/AZWidgets.dart';
@@ -11,7 +12,7 @@ class Search extends StatefulWidget {
   _SearchState createState() => _SearchState();
 }
 
-String currentUser = Constants.currentUser;
+String currentUser;
 
 class _SearchState extends State<Search> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
@@ -30,22 +31,69 @@ class _SearchState extends State<Search> {
   }
 
   Widget userListView() {
-    return userSnapshot != null
-        ? ListView.builder(
-            shrinkWrap: true,
-            itemCount: userSnapshot.documents.length,
-            itemBuilder: (BuildContext context, int index) {
-              String username =
-                  userSnapshot.documents[index].data["username"].toString();
-              String email = userSnapshot.documents[index].data["email"];
-              return searchTile(
-                buildContext: context,
-                userEmailLabel: email,
-                usernameLabel: username,
-              );
-            },
-          )
-        : Container();
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    String emailSearch = searchByUserEmailTextEditingController.text;
+
+    if (userSnapshot == null) {
+      return Container();
+    } else if (userSnapshot.documents.length == 0) {
+      return emailSearch.isEmpty
+          ? Container()
+          : Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: screenHeight * 0.1,
+                horizontal: screenWidth * 0.1,
+              ),
+              child: Container(
+                child: Container(
+                  width: screenWidth * 0.7,
+                  alignment: Alignment.topCenter,
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(
+                      'Please provide a registered E-mail.',
+                      style: azSimpleTextStyle(
+                        buildContext: context,
+                      ),
+                    ),
+                  ),
+                ),
+              ));
+    } else {
+      return userSnapshot.documents[0].data["username"].toString() !=
+              currentUser
+          ? ListView.builder(
+              shrinkWrap: true,
+              itemCount: userSnapshot.documents.length,
+              itemBuilder: (BuildContext context, int index) {
+                String username =
+                    userSnapshot.documents[index].data["username"].toString();
+                String email = userSnapshot.documents[index].data["email"];
+                return searchTile(
+                  buildContext: context,
+                  userEmailLabel: email,
+                  usernameLabel: username,
+                );
+              },
+            )
+          : Padding(
+              padding: EdgeInsets.only(
+                top: screenHeight * 0.1,
+                bottom: screenHeight * 0.1,
+                left: screenWidth * 0.1,
+              ),
+              child: Container(
+                alignment: Alignment.topCenter,
+                child: Text(
+                  'This email belongs to you.',
+                  style: azSimpleTextStyle(
+                    buildContext: context,
+                  ),
+                ),
+              ),
+            );
+    }
   }
 
   createChatRoomAndStartConversation({String userName}) {
@@ -58,8 +106,12 @@ class _SearchState extends State<Search> {
 
     if (userName != currentUser) {
       DatabaseMethods().createChatRoom(chatRoomId, chatroomMap);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => ConversationScreen()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ConversationScreen(
+                    chatRoomId: chatRoomId,
+                  )));
     } else {
       print("Nope!!!");
     }
@@ -154,8 +206,13 @@ class _SearchState extends State<Search> {
 
   @override
   void initState() {
-    initiateSearch();
+    getUserInfo();
     super.initState();
+  }
+
+  getUserInfo() async {
+    currentUser = await HelperFunctions.getLoggedInUserNameSharePreferences();
+    setState(() {});
   }
 
   @override

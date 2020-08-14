@@ -28,4 +28,16 @@ class DatabaseMethods {
       print(e.toString());
     });
   }
+
+  setConversationMessageByRoomId(
+      String chatRoomId, Map<String, String> messageMap) {
+    Firestore.instance
+        .collection('ChatRooms')
+        .document(chatRoomId)
+        .collection('Chats')
+        .add(messageMap)
+        .catchError((e) {
+      print('${e.toString()}');
+    });
+  }
 }
