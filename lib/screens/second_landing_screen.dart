@@ -7,41 +7,44 @@ class SecondLandingScreen extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Padding(
-      padding: EdgeInsets.all(40.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Center(
-            child: Image(
-              image: AssetImage(
-                'assets/images/privacy.png',
+    return Container(
+      color: Theme.of(context).accentColor,
+      child: Padding(
+        padding: EdgeInsets.all(40.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Center(
+              child: Image(
+                image: AssetImage(
+                  'assets/images/privacy.png',
+                ),
+                height: 200,
+                width: 300,
               ),
-              height: 200,
-              width: 300,
             ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Text(
-            'Stay Secure!',
-            style: azTitleStyle(
-              buildContext: context,
-              color: Theme.of(context).accentColor,
+            SizedBox(
+              height: 30,
             ),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Text(
-            'Privacy is guaranteed.\nStay connected away from prying eyes.',
-            style: azSimpleTextStyle(
-              buildContext: context,
-              color: Theme.of(context).accentColor,
+            Text(
+              'Stay Secure!',
+              style: azTitleStyle(
+                buildContext: context,
+                color: Theme.of(context).primaryColor,
+              ),
             ),
-          ),
-        ],
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              'Privacy is guaranteed.\nStay connected away from prying eyes.',
+              style: azSimpleTextStyle(
+                buildContext: context,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
