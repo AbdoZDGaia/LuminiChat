@@ -10,37 +10,73 @@ class SecondLandingScreen extends StatelessWidget {
     return Container(
       color: Theme.of(context).accentColor,
       child: Padding(
-        padding: EdgeInsets.all(40.0),
+        padding: EdgeInsets.symmetric(
+            vertical: screenHeight * 0.1, horizontal: screenWidth * 0.1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            SizedBox(
+              height: screenHeight * 0.05,
+            ),
             Center(
               child: Image(
                 image: AssetImage(
                   'assets/images/privacy.png',
                 ),
-                height: 200,
-                width: 300,
+                height: screenHeight * 0.3,
               ),
             ),
             SizedBox(
-              height: 30,
+              height: screenHeight * 0.09,
             ),
-            Text(
-              'Stay Secure!',
-              style: azTitleStyle(
-                buildContext: context,
-                color: Theme.of(context).primaryColor,
+            Center(
+              child: Text(
+                'Choose When to Chat',
+                style: azTitleStyle(
+                  fontSize: screenWidth * 0.07,
+                  italic: true,
+                  buildContext: context,
+                  color: Colors.blueGrey,
+                ),
+              ),
+            ),
+            Center(
+              child: Text(
+                'And Whom to Chat',
+                style: azTitleStyle(
+                  fontSize: screenWidth * 0.07,
+                  italic: true,
+                  buildContext: context,
+                  color: Colors.blueGrey,
+                ),
               ),
             ),
             SizedBox(
-              height: 15,
+              height: screenHeight * 0.09,
             ),
-            Text(
-              'Privacy is guaranteed.\nStay connected away from prying eyes.',
-              style: azSimpleTextStyle(
-                buildContext: context,
-                color: Theme.of(context).primaryColor,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
+              child: Text(
+                'Privacy is guaranteed',
+                style: azSimpleTextStyle(
+                  fontSize: screenWidth * 0.05,
+                  buildContext: context,
+                  color: Colors.blueGrey,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: screenHeight * 0.01,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
+              child: Text(
+                'Stay connected away from prying eyes',
+                style: azSimpleTextStyle(
+                  fontSize: screenWidth * 0.05,
+                  buildContext: context,
+                  color: Colors.blueGrey,
+                ),
               ),
             ),
           ],

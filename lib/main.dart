@@ -3,7 +3,6 @@ import 'package:lumini_chat/helper/authenticate.dart';
 import 'package:lumini_chat/helper/helper_methods.dart';
 import 'package:lumini_chat/screens/chats_screen.dart';
 import 'package:lumini_chat/screens/intro_screen.dart';
-import 'package:lumini_chat/screens/intro_screen_alt.dart';
 
 void main() {
   runApp(MyApp());
@@ -43,7 +42,7 @@ class _MyAppState extends State<MyApp> {
       ),
       home: isLoggedIn != null
           ? isLoggedIn ? ChatRoom() : Authenticate()
-          : IntroScreenAlt(),
+          : IntroScreen(),
     );
   }
 }
