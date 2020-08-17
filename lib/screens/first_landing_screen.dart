@@ -52,7 +52,7 @@ class FirstLandingScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: screenHeight * 0.09,
+              height: screenHeight * 0.07,
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),

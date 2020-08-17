@@ -27,7 +27,7 @@ class SecondLandingScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: screenHeight * 0.09,
+              height: screenHeight * 0.07,
             ),
             Center(
               child: Text(

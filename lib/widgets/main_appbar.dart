@@ -5,21 +5,22 @@ import 'package:lumini_chat/helper/helper_methods.dart';
 import 'package:lumini_chat/services/auth.dart';
 import 'package:flutter/foundation.dart';
 
-Widget mainAppBar(
-    {@required BuildContext buildContext,
-    bool logoutIconIncluded = false,
-    double iconSize = 35}) {
+Widget mainAppBar({
+  @required BuildContext buildContext,
+  bool logoutIconIncluded = false,
+  double iconSize = 35,
+  String title = 'Lumini Chat',
+  bool centerTitle = false,
+}) {
   final double screenHeight = MediaQuery.of(buildContext).size.height;
   final double screenWidth = MediaQuery.of(buildContext).size.width;
   AuthMethods authMethods = new AuthMethods();
 
   return AppBar(
     iconTheme: new IconThemeData(
-      color: Theme.of(buildContext).accentColor,
-      size: iconSize
-    ),
+        color: Theme.of(buildContext).accentColor, size: iconSize),
     elevation: 0.0,
-    centerTitle: false,
+    centerTitle: centerTitle,
     title: Padding(
       padding: EdgeInsets.only(
         top: screenHeight * 0.01,
@@ -29,7 +30,7 @@ Widget mainAppBar(
       child: FittedBox(
         fit: BoxFit.fill,
         child: Text(
-          'Lumini Chat',
+          title,
           style: TextStyle(
             color: Theme.of(buildContext).accentColor,
             fontSize: 28.0,

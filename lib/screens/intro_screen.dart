@@ -44,7 +44,7 @@ class _IntroScreenState extends State<IntroScreen> {
             pages: pages,
             onPageChangeCallback: pageChangeCallback,
             waveType: WaveType.liquidReveal,
-            fullTransitionValue: 300,
+            fullTransitionValue: 150,
             liquidController: liquidController,
             ignoreUserGestureWhileAnimating: true,
             enableSlideIcon: true,

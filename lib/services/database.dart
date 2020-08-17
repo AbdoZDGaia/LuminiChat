@@ -29,8 +29,8 @@ class DatabaseMethods {
     });
   }
 
-  setConversationMessageByRoomId(
-      String chatRoomId, Map<String, String> messageMap) {
+  addConversationMessageByRoomId(
+      String chatRoomId, Map<String, dynamic> messageMap) {
     Firestore.instance
         .collection('ChatRooms')
         .document(chatRoomId)
@@ -39,5 +39,14 @@ class DatabaseMethods {
         .catchError((e) {
       print('${e.toString()}');
     });
+  }
+
+  getConversationMessagesByRoomId(String chatRoomId) {
+    return Firestore.instance
+        .collection('ChatRooms')
+        .document(chatRoomId)
+        .collection('Chats')
+        .orderBy('Time')
+        .snapshots();
   }
 }

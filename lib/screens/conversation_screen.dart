@@ -1,80 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:lumini_chat/helper/constants.dart';
+import 'package:lumini_chat/helper/helper_methods.dart';
+import 'package:lumini_chat/services/database.dart';
 import 'package:lumini_chat/widgets/main_appbar.dart';
 
 class ConversationScreen extends StatefulWidget {
   final String chatRoomId;
+  final String currentUser;
+  final String otherUserInChat;
 
-  ConversationScreen({this.chatRoomId});
+  ConversationScreen({this.chatRoomId, @required this.currentUser,@required this.otherUserInChat});
   @override
   _ConversationScreenState createState() => _ConversationScreenState();
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
-  // _buildMessage(Message message, bool isMe) {
-  //   final Container msg = Container(
-  //     width: MediaQuery.of(context).size.width * 0.75,
-  //     margin: isMe
-  //         ? EdgeInsets.only(
-  //             top: 8.0,
-  //             bottom: 8.0,
-  //             left: 80.0,
-  //           )
-  //         : EdgeInsets.only(
-  //             top: 8.0,
-  //             bottom: 8.0,
-  //           ),
-  //     padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
-  //     decoration: BoxDecoration(
-  //       color: isMe ? Theme.of(context).accentColor : Color(0xffffefee),
-  //       borderRadius: isMe
-  //           ? BorderRadius.only(
-  //               topLeft: Radius.circular(15),
-  //               bottomLeft: Radius.circular(15),
-  //             )
-  //           : BorderRadius.only(
-  //               topRight: Radius.circular(15),
-  //               bottomRight: Radius.circular(15),
-  //             ),
-  //     ),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Text(message.time),
-  //         SizedBox(height: 5.0),
-  //         Text(message.text),
-  //       ],
-  //     ),
-  //   );
+  DatabaseMethods databaseMethods = new DatabaseMethods();
+  TextEditingController messageBodyTextController = new TextEditingController();
 
-  //   if (isMe) return msg;
-  //   return Row(
-  //     children: [
-  //       msg,
-  //       IconButton(
-  //         icon: Icon(
-  //           message.isLiked ? Icons.favorite : Icons.favorite_border,
-  //           size: 30.0,
-  //           color: message.isLiked
-  //               ? Theme.of(context).primaryColor
-  //               : Colors.blueGrey,
-  //         ),
-  //         onPressed: () {},
-  //       ),
-  //     ],
-  //   );
-  // }
+  sendMessages() {
+    if (messageBodyTextController.text.isNotEmpty) {
+      Map<String, dynamic> messageMap = {
+        "Message": messageBodyTextController.text,
+        "SentBy": Constants.currentUser,
+        "TimeSent": setTimeNow(),
+        "Time": DateTime.now().millisecondsSinceEpoch,
+        "Liked": false,
+      };
+      databaseMethods.addConversationMessageByRoomId(
+          widget.chatRoomId, messageMap);
+      messageBodyTextController.text = '';
+    }
+  }
+
+  setTimeNow() {
+    DateTime now = DateTime.now();
+    String formattedTime = DateFormat.jm().format(now);
+    return formattedTime;
+  }
+
+  Widget chatMessagesList() {
+    return StreamBuilder(
+      stream:
+          databaseMethods.getConversationMessagesByRoomId(widget.chatRoomId),
+      builder: (context, snapshot) {
+        if (snapshot.data == null)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        else
+          return Container(
+            child: ListView.builder(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.01),
+              itemCount: snapshot.data.documents.length,
+              itemBuilder: (BuildContext context, int index) {
+                final message = snapshot.data.documents[index].data["Message"];
+                final liked = snapshot.data.documents[index].data["Liked"];
+                final isMe = snapshot.data.documents[index].data["SentBy"] ==
+                    widget.currentUser;
+                final time = snapshot.data.documents[index].data["TimeSent"];
+                return MessageTile(
+                  isMe: isMe,
+                  liked: liked,
+                  message: message,
+                  time: time,
+                );
+              },
+            ),
+          );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    getUserInfo();
+    super.initState();
+  }
+
+  getUserInfo() async {
+    Constants.currentUser =
+        await HelperFunctions.getLoggedInUserNameSharePreferences();
+  }
 
   _buildMessageComposer() {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.01, vertical: screenHeight * 0.01),
       height: screenHeight * 0.11,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(
-          top: BorderSide(width: 3.0, color: Theme.of(context).primaryColor),
-        ),
       ),
       child: Row(
         children: [
@@ -93,15 +112,15 @@ class _ConversationScreenState extends State<ConversationScreen> {
             child: Container(
               padding: EdgeInsets.symmetric(
                   vertical: screenHeight * 0.01,
-                  horizontal: screenWidth * 0.02),
+                  horizontal: screenWidth * 0.04),
               decoration: BoxDecoration(
                 border:
-                    Border.all(style: BorderStyle.solid, color: Colors.grey),
+                    Border.all(style: BorderStyle.solid,width: 2.0, color: Theme.of(context).primaryColor),
                 borderRadius: BorderRadius.circular(30),
-                color: Theme.of(context).accentColor,
               ),
-              height: screenHeight * 0.05,
+              height: screenHeight * 0.06,
               child: TextField(
+                controller: messageBodyTextController,
                 onChanged: (value) {},
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration.collapsed(
@@ -115,7 +134,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
               Icons.send,
               color: Theme.of(context).primaryColor,
             ),
-            onPressed: () {},
+            onPressed: () {
+              sendMessages();
+            },
           ),
         ],
       ),
@@ -126,9 +147,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      appBar: mainAppBar(
-        buildContext: context,
-      ),
+      appBar: mainAppBar(buildContext: context,centerTitle: true, title: widget.otherUserInChat),
       body: GestureDetector(
         onTap: () {
           return FocusScope.of(context).unfocus();
@@ -138,7 +157,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).accentColor,
+                  color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30.0),
@@ -149,22 +168,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     topRight: Radius.circular(30.0),
                     topLeft: Radius.circular(30.0),
                   ),
-                  child: ListView.builder(
-                    reverse: true,
-                    padding: EdgeInsets.only(top: 15.0),
-                    itemCount: 10,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Text('hi');
-                      // final List<Message> messagesList = messages
-                      //     .where((i) =>
-                      //         i.sender.id == currentUser.id ||
-                      //         i.sender.id == widget.user.id)
-                      //     .defaultIfEmpty(Message());
-                      // final message = chatroom;
-                      // final bool isMe = message.sender.id == currentUser.id;
-                      // return _buildMessage(message, isMe);
-                    },
-                  ),
+                  child: chatMessagesList(),
                 ),
               ),
             ),
@@ -173,5 +177,85 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ),
       ),
     );
+  }
+}
+
+class MessageTile extends StatelessWidget {
+  final String message;
+  final bool liked;
+  final String time;
+  final bool isMe;
+
+  MessageTile(
+      {@required this.isMe,
+      @required this.liked,
+      @required this.message,
+      @required this.time});
+
+  _buildMessage(
+      {String messageBody,
+      bool isMe,
+      bool isLiked,
+      String timeSent,
+      @required BuildContext context}) {
+    final Container msg = Container(
+      width: MediaQuery.of(context).size.width * 0.75,
+      margin: isMe
+          ? EdgeInsets.only(
+              top: 8.0,
+              bottom: 8.0,
+              left: 80.0,
+            )
+          : EdgeInsets.only(
+              top: 8.0,
+              bottom: 8.0,
+            ),
+      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
+      decoration: BoxDecoration(
+        color: isMe ? Theme.of(context).accentColor : Color(0xffffefee),
+        borderRadius: isMe
+            ? BorderRadius.only(
+                topLeft: Radius.circular(15),
+                bottomLeft: Radius.circular(15),
+              )
+            : BorderRadius.only(
+                topRight: Radius.circular(15),
+                bottomRight: Radius.circular(15),
+              ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(timeSent),
+          SizedBox(height: 5.0),
+          Text(messageBody),
+        ],
+      ),
+    );
+
+    if (isMe) return msg;
+    return Row(
+      children: [
+        msg,
+        IconButton(
+          icon: Icon(
+            isLiked ? Icons.favorite : Icons.favorite_border,
+            size: 30.0,
+            color: isLiked ? Theme.of(context).primaryColor : Colors.blueGrey,
+          ),
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildMessage(
+        isLiked: liked,
+        context: context,
+        isMe: isMe,
+        messageBody: message,
+        timeSent: time);
   }
 }

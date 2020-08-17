@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lumini_chat/helper/helper_methods.dart';
 import 'package:lumini_chat/screens/conversation_screen.dart';
 import 'package:lumini_chat/services/database.dart';
 import 'package:lumini_chat/widgets/AZWidgets.dart';
 import 'package:strings/strings.dart';
 
 class Search extends StatefulWidget {
+  final String currentUser;
+
+  Search({@required this.currentUser});
   @override
   _SearchState createState() => _SearchState();
 }
-
-String currentUser;
 
 class _SearchState extends State<Search> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
@@ -61,7 +61,7 @@ class _SearchState extends State<Search> {
               ));
     } else {
       return userSnapshot.documents[0].data["username"].toString() !=
-              currentUser
+              widget.currentUser
           ? ListView.builder(
               shrinkWrap: true,
               itemCount: userSnapshot.documents.length,
@@ -96,19 +96,21 @@ class _SearchState extends State<Search> {
   }
 
   createChatRoomAndStartConversation({String userName}) {
-    String chatRoomId = getChatRoomId(userName, currentUser);
-    List<String> users = [userName, currentUser];
+    String chatRoomId = getChatRoomId(userName, widget.currentUser);
+    List<String> users = [userName, widget.currentUser];
     Map<String, dynamic> chatroomMap = {
       "users": users,
       "chatRoomId": chatRoomId
     };
 
-    if (userName != currentUser) {
+    if (userName != widget.currentUser) {
       DatabaseMethods().createChatRoom(chatRoomId, chatroomMap);
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => ConversationScreen(
+                    otherUserInChat: userName,
+                    currentUser: widget.currentUser,
                     chatRoomId: chatRoomId,
                   )));
     } else {
@@ -205,13 +207,7 @@ class _SearchState extends State<Search> {
 
   @override
   void initState() {
-    getUserInfo();
     super.initState();
-  }
-
-  getUserInfo() async {
-    currentUser = await HelperFunctions.getLoggedInUserNameSharePreferences();
-    setState(() {});
   }
 
   @override
