@@ -16,6 +16,7 @@ class _SearchState extends State<Search> {
   TextEditingController searchByUserEmailTextEditingController =
       new TextEditingController();
   QuerySnapshot userSnapshot;
+  QuerySnapshot chatRoomSnapshot;
 
   initiateSearch() {
     databaseMethods
@@ -94,9 +95,15 @@ class _SearchState extends State<Search> {
     }
   }
 
+  _invertRoomId(String roomId) {
+    List<String> userSplitList = roomId.split("_");
+    return '${userSplitList[1]}_${userSplitList[0]}';
+  }
+
   createChatRoomAndStartConversation({String userName}) {
     String chatRoomId = getChatRoomId(userName, Constants.currentUser);
     List<String> users = [userName, Constants.currentUser];
+    String invertedChatRoomId = _invertRoomId(chatRoomId);
     Map<String, dynamic> chatroomMap = {
       "users": users,
       "chatRoomId": chatRoomId
@@ -114,6 +121,33 @@ class _SearchState extends State<Search> {
     } else {
       print("Nope!!!");
     }
+    databaseMethods.isRoomDuplicated(invertedChatRoomId).then((val) {
+      setState(() {
+        chatRoomSnapshot = val;
+        if (chatRoomSnapshot.documents.length == 0) {
+          if (userName != Constants.currentUser) {
+            DatabaseMethods().createChatRoom(chatRoomId, chatroomMap);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ConversationScreen(
+                          otherUserInChat: userName,
+                          chatRoomId: chatRoomId,
+                        )));
+          } else {
+            print("Nope!!!");
+          }
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ConversationScreen(
+                        otherUserInChat: userName,
+                        chatRoomId: invertedChatRoomId,
+                      )));
+        }
+      });
+    });
   }
 
   Widget searchTile(

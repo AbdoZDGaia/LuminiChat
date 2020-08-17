@@ -29,6 +29,15 @@ class DatabaseMethods {
     });
   }
 
+  isRoomDuplicated(String invertedChatRoomId) {
+    return Firestore.instance
+        .collection("ChatRooms")
+        .where("chatRoomId", isEqualTo: invertedChatRoomId).getDocuments()
+        .catchError((e) {
+      print(e.toString());
+    });
+  }
+
   addConversationMessageByRoomId(
       String chatRoomId, Map<String, dynamic> messageMap) {
     Firestore.instance
