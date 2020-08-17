@@ -108,19 +108,7 @@ class _SearchState extends State<Search> {
       "users": users,
       "chatRoomId": chatRoomId
     };
-
-    if (userName != Constants.currentUser) {
-      DatabaseMethods().createChatRoom(chatRoomId, chatroomMap);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ConversationScreen(
-                    otherUserInChat: userName,
-                    chatRoomId: chatRoomId,
-                  )));
-    } else {
-      print("Nope!!!");
-    }
+    
     databaseMethods.isRoomDuplicated(invertedChatRoomId).then((val) {
       setState(() {
         chatRoomSnapshot = val;
