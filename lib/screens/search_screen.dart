@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lumini_chat/helper/constants.dart';
 import 'package:lumini_chat/screens/conversation_screen.dart';
 import 'package:lumini_chat/services/database.dart';
 import 'package:lumini_chat/widgets/AZWidgets.dart';
 import 'package:strings/strings.dart';
 
 class Search extends StatefulWidget {
-  final String currentUser;
-
-  Search({@required this.currentUser});
   @override
   _SearchState createState() => _SearchState();
 }
@@ -61,14 +59,15 @@ class _SearchState extends State<Search> {
               ));
     } else {
       return userSnapshot.documents[0].data["username"].toString() !=
-              widget.currentUser
+              Constants.currentUser
           ? ListView.builder(
               shrinkWrap: true,
               itemCount: userSnapshot.documents.length,
               itemBuilder: (BuildContext context, int index) {
                 String username =
                     userSnapshot.documents[index].data["username"].toString();
-                String email = userSnapshot.documents[index].data["email"];
+                String email =
+                    userSnapshot.documents[index].data["email"].toString();
                 return searchTile(
                   buildContext: context,
                   userEmailLabel: email,
@@ -96,21 +95,20 @@ class _SearchState extends State<Search> {
   }
 
   createChatRoomAndStartConversation({String userName}) {
-    String chatRoomId = getChatRoomId(userName, widget.currentUser);
-    List<String> users = [userName, widget.currentUser];
+    String chatRoomId = getChatRoomId(userName, Constants.currentUser);
+    List<String> users = [userName, Constants.currentUser];
     Map<String, dynamic> chatroomMap = {
       "users": users,
       "chatRoomId": chatRoomId
     };
 
-    if (userName != widget.currentUser) {
+    if (userName != Constants.currentUser) {
       DatabaseMethods().createChatRoom(chatRoomId, chatroomMap);
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => ConversationScreen(
                     otherUserInChat: userName,
-                    currentUser: widget.currentUser,
                     chatRoomId: chatRoomId,
                   )));
     } else {
@@ -150,28 +148,32 @@ class _SearchState extends State<Search> {
                 width: screenWidth * 0.02,
               ),
               Container(
+                width: screenWidth * 0.5,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Container(
-                      width: screenWidth * 0.5,
                       child: Text(
                         capitalize(usernameLabel),
                         style: azSimpleTextStyle(
                           buildContext: context,
                           color: Colors.black,
+                          fontSize: 20.0,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    SizedBox(
+                      height: screenHeight * 0.005,
+                    ),
                     Container(
-                      width: screenWidth * 0.5,
                       child: Text(
                         userEmailLabel,
                         style: azSimpleTextStyle(
                           buildContext: context,
                           color: Colors.black,
+                          fontSize: 16,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -191,11 +193,14 @@ class _SearchState extends State<Search> {
                     );
                   },
                   color: Theme.of(context).primaryColor,
-                  child: Text("Message".toUpperCase(),
-                      style: azSimpleTextStyle(
-                        buildContext: context,
-                        color: Theme.of(context).accentColor,
-                      )),
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text("Message".toUpperCase(),
+                        style: azSimpleTextStyle(
+                          buildContext: context,
+                          color: Theme.of(context).accentColor,
+                        )),
+                  ),
                 ),
               ),
             ],

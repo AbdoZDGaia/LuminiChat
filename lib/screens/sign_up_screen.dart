@@ -25,7 +25,7 @@ class _SignUpState extends State<SignUp> {
   final formKey = GlobalKey<FormState>();
   DatabaseMethods databaseMethods = new DatabaseMethods();
 
-  signMeUp() {
+  signMeUp() async {
     String passHash = passwordTextEditingController.text;
     String email = emailTextEditingController.text;
     String username = userNameTextEditingController.text;
@@ -38,24 +38,30 @@ class _SignUpState extends State<SignUp> {
       }
     }
 
-    Map<String, dynamic> userMap = {
-      "email": email.toLowerCase(),
-      "passHash": passHash,
-      "username": username,
-      "searchIndex": userIndexList,
-    };
-    HelperFunctions.setLoggedInUserEmailSharePreferences(email);
-    HelperFunctions.setLoggedInUserNameSharePreferences(username);
-
     if (formKey.currentState.validate()) {
       setState(() {
         isLoading = true;
       });
-      authMethods.signUpWithEmailAndPassword(email, passHash).then((value) {
-        databaseMethods.uploadUserInfo(userMap);
-        HelperFunctions.setIsUserLoggedInSharedPreferences(true);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => ChatRoom()));
+
+      Map<String, dynamic> userMap = {
+        "email": email.toLowerCase(),
+        "passHash": passHash,
+        "username": username,
+        "searchIndex": userIndexList,
+      };
+      await authMethods
+          .signUpWithEmailAndPassword(email, passHash)
+          .then((result) {
+        if (result != null) {
+          databaseMethods.uploadUserInfo(userMap);
+
+          HelperFunctions.setIsUserLoggedInSharedPreferences(true);
+          HelperFunctions.setLoggedInUserNameSharePreferences(username);
+          HelperFunctions.setLoggedInUserEmailSharePreferences(email);
+
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => ChatRoom()));
+        }
       });
     }
   }

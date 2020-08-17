@@ -25,27 +25,34 @@ class _SignInState extends State<SignIn> {
       new TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  void signMeInWithEmailAndPass() {
+  void signMeInWithEmailAndPass() async {
     String passHash = passwordTextEditingController.text;
     String email = emailTextEditingController.text;
-    QuerySnapshot userSnapshot;
 
     if (formKey.currentState.validate()) {
       setState(() {
         isLoading = true;
       });
 
-      authMethods.signInWithEmailAndPassword(email, passHash).then((val) {
-        if (val != null) {
-          databaseMethods.getUserByUserEmail(email).then((val) {
-            userSnapshot = val;
-            HelperFunctions.setLoggedInUserNameSharePreferences(
-                userSnapshot.documents[0].data["username"]);
-          });
-          HelperFunctions.setLoggedInUserEmailSharePreferences(email);
+      await authMethods
+          .signInWithEmailAndPassword(email, passHash)
+          .then((result) async {
+        if (result != null) {
+          QuerySnapshot userInfoSnapshot =
+              await DatabaseMethods().getUserByUserEmail(email);
+
           HelperFunctions.setIsUserLoggedInSharedPreferences(true);
+          HelperFunctions.setLoggedInUserNameSharePreferences(
+              userInfoSnapshot.documents[0].data["username"]);
+          HelperFunctions.setLoggedInUserEmailSharePreferences(
+              userInfoSnapshot.documents[0].data["email"]);
+
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => ChatRoom()));
+        } else {
+          setState(() {
+            isLoading = false;
+          });
         }
       });
     }

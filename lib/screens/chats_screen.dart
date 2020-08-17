@@ -21,8 +21,14 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   getUserInfo() async {
-    Constants.currentUser =
+    String currentUser =
         await HelperFunctions.getLoggedInUserNameSharePreferences();
+    String currentUserEmail =
+        await HelperFunctions.getLoggedInUserEmailSharePreferences();
+    setState(() {
+      Constants.currentUser = currentUser;
+      Constants.currentUserEmail = currentUserEmail;
+    });
   }
 
   @override
@@ -37,11 +43,7 @@ class _ChatRoomState extends State<ChatRoom> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Search(
-                        currentUser: Constants.currentUser,
-                      )));
+              context, MaterialPageRoute(builder: (context) => Search()));
         },
         child: Icon(
           Icons.search,

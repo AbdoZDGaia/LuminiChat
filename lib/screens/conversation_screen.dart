@@ -7,10 +7,9 @@ import 'package:lumini_chat/widgets/main_appbar.dart';
 
 class ConversationScreen extends StatefulWidget {
   final String chatRoomId;
-  final String currentUser;
   final String otherUserInChat;
 
-  ConversationScreen({this.chatRoomId, @required this.currentUser,@required this.otherUserInChat});
+  ConversationScreen({this.chatRoomId, @required this.otherUserInChat});
   @override
   _ConversationScreenState createState() => _ConversationScreenState();
 }
@@ -18,6 +17,7 @@ class ConversationScreen extends StatefulWidget {
 class _ConversationScreenState extends State<ConversationScreen> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
   TextEditingController messageBodyTextController = new TextEditingController();
+  ScrollController _scrollController = new ScrollController();
 
   sendMessages() {
     if (messageBodyTextController.text.isNotEmpty) {
@@ -52,6 +52,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
         else
           return Container(
             child: ListView.builder(
+              reverse: true,
+              shrinkWrap: true,
+              controller: _scrollController,
               padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.01),
               itemCount: snapshot.data.documents.length,
@@ -59,7 +62,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 final message = snapshot.data.documents[index].data["Message"];
                 final liked = snapshot.data.documents[index].data["Liked"];
                 final isMe = snapshot.data.documents[index].data["SentBy"] ==
-                    widget.currentUser;
+                    Constants.currentUser;
                 final time = snapshot.data.documents[index].data["TimeSent"];
                 return MessageTile(
                   isMe: isMe,
@@ -81,8 +84,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   getUserInfo() async {
-    Constants.currentUser =
+    String currentUser =
         await HelperFunctions.getLoggedInUserNameSharePreferences();
+    String currentUserEmail =
+        await HelperFunctions.getLoggedInUserEmailSharePreferences();
+    setState(() {
+      Constants.currentUser = currentUser;
+      Constants.currentUserEmail = currentUserEmail;
+    });
   }
 
   _buildMessageComposer() {
@@ -114,14 +123,22 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   vertical: screenHeight * 0.01,
                   horizontal: screenWidth * 0.04),
               decoration: BoxDecoration(
-                border:
-                    Border.all(style: BorderStyle.solid,width: 2.0, color: Theme.of(context).primaryColor),
+                border: Border.all(
+                    style: BorderStyle.solid,
+                    width: 2.0,
+                    color: Theme.of(context).primaryColor),
                 borderRadius: BorderRadius.circular(30),
               ),
               height: screenHeight * 0.06,
               child: TextField(
                 controller: messageBodyTextController,
-                onChanged: (value) {},
+                onTap: () {
+                  _scrollController.animateTo(
+                    0.0,
+                    curve: Curves.easeOut,
+                    duration: const Duration(milliseconds: 300),
+                  );
+                },
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Send a message...',
@@ -147,7 +164,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      appBar: mainAppBar(buildContext: context,centerTitle: true, title: widget.otherUserInChat),
+      appBar: mainAppBar(
+          buildContext: context,
+          centerTitle: true,
+          title: widget.otherUserInChat),
       body: GestureDetector(
         onTap: () {
           return FocusScope.of(context).unfocus();
