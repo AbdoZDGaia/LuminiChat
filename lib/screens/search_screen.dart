@@ -35,7 +35,7 @@ class _SearchState extends State<Search> {
 
     if (userSnapshot == null) {
       return Container();
-    } else if (userSnapshot.documents.length == 0) {
+    } else if (userSnapshot.docs.length == 0) {
       return emailSearch.isEmpty
           ? Container()
           : Padding(
@@ -59,16 +59,16 @@ class _SearchState extends State<Search> {
                 ),
               ));
     } else {
-      return userSnapshot.documents[0].data["username"].toString() !=
+      return userSnapshot.docs[0].data()["username"].toString() !=
               Constants.currentUser
           ? ListView.builder(
               shrinkWrap: true,
-              itemCount: userSnapshot.documents.length,
+              itemCount: userSnapshot.docs.length,
               itemBuilder: (BuildContext context, int index) {
                 String username =
-                    userSnapshot.documents[index].data["username"].toString();
+                    userSnapshot.docs[index].data()["username"].toString();
                 String email =
-                    userSnapshot.documents[index].data["email"].toString();
+                    userSnapshot.docs[index].data()["email"].toString();
                 return searchTile(
                   buildContext: context,
                   userEmailLabel: email,
@@ -112,7 +112,7 @@ class _SearchState extends State<Search> {
     databaseMethods.isRoomDuplicated(invertedChatRoomId).then((val) {
       setState(() {
         chatRoomSnapshot = val;
-        if (chatRoomSnapshot.documents.length == 0) {
+        if (chatRoomSnapshot.docs.length == 0) {
           if (userName != Constants.currentUser) {
             DatabaseMethods().createChatRoom(chatRoomId, chatroomMap);
             Navigator.push(

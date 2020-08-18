@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "509468943274-ksvr5oitc064sc01gr2fbam5q2125v1v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.luminance.lumini_chat",
+            "certificate_hash": "57b77e5b388a6d821b5c90c27cb13a6b5c39000f"
+          }
+        },
+        {
           "client_id": "509468943274-h0k867fksena81kv86b4tijoibb1ilo8.apps.googleusercontent.com",
           "client_type": 3
         }

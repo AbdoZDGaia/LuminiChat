@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lumini_chat/helper/constants.dart';
@@ -44,7 +45,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     return StreamBuilder(
       stream:
           databaseMethods.getConversationMessagesByRoomId(widget.chatRoomId),
-      builder: (context, snapshot) {
+      builder: (context,snapshot) {
         if (snapshot.data == null)
           return Center(
             child: CircularProgressIndicator(),
@@ -59,11 +60,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   top: MediaQuery.of(context).size.height * 0.01),
               itemCount: snapshot.data.documents.length,
               itemBuilder: (BuildContext context, int index) {
-                final message = snapshot.data.documents[index].data["Message"];
-                final liked = snapshot.data.documents[index].data["Liked"];
-                final isMe = snapshot.data.documents[index].data["SentBy"] ==
+                final message = snapshot.data.documents[index].data()["Message"];
+                final liked = snapshot.data.documents[index].data()["Liked"];
+                final isMe = snapshot.data.documents[index].data()["SentBy"] ==
                     Constants.currentUser;
-                final time = snapshot.data.documents[index].data["TimeSent"];
+                final time = snapshot.data.documents[index].data()["TimeSent"];
                 return MessageTile(
                   isMe: isMe,
                   liked: liked,

@@ -2,37 +2,37 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseMethods {
   getUserByUsername(usernameSearchString) async {
-    return await Firestore.instance
+    return await FirebaseFirestore.instance
         .collection("Users")
         .where("searchIndex", arrayContains: usernameSearchString)
-        .getDocuments();
+        .get();
   }
 
   getUserByUserEmail(userEmail) async {
-    return await Firestore.instance
+    return await FirebaseFirestore.instance
         .collection("Users")
         .where("email", isEqualTo: userEmail.toString().toLowerCase())
-        .getDocuments();
+        .get();
   }
 
   uploadUserInfo(userMap) {
-    Firestore.instance.collection("Users").add(userMap);
+    FirebaseFirestore.instance.collection("Users").add(userMap);
   }
 
   createChatRoom(String chatRoomId, chatroomMap) {
-    return Firestore.instance
+    return FirebaseFirestore.instance
         .collection("ChatRooms")
-        .document(chatRoomId)
-        .setData(chatroomMap)
+        .doc(chatRoomId)
+        .set(chatroomMap)
         .catchError((e) {
       print(e.toString());
     });
   }
 
   isRoomDuplicated(String invertedChatRoomId) {
-    return Firestore.instance
+    return FirebaseFirestore.instance
         .collection("ChatRooms")
-        .where("chatRoomId", isEqualTo: invertedChatRoomId).getDocuments()
+        .where("chatRoomId", isEqualTo: invertedChatRoomId).get()
         .catchError((e) {
       print(e.toString());
     });
@@ -40,9 +40,9 @@ class DatabaseMethods {
 
   addConversationMessageByRoomId(
       String chatRoomId, Map<String, dynamic> messageMap) {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection('ChatRooms')
-        .document(chatRoomId)
+        .doc(chatRoomId)
         .collection('Chats')
         .add(messageMap)
         .catchError((e) {
@@ -51,9 +51,9 @@ class DatabaseMethods {
   }
 
   getConversationMessagesByRoomId(String chatRoomId) {
-    return Firestore.instance
+    return FirebaseFirestore.instance
         .collection('ChatRooms')
-        .document(chatRoomId)
+        .doc(chatRoomId)
         .collection('Chats')
         .orderBy('Time', descending: true)
         .snapshots();

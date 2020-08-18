@@ -1,4 +1,4 @@
-class User {
+class AppUser {
   String userId;
-  User({this.userId});
+  AppUser({this.userId});
 }

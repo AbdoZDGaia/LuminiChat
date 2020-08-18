@@ -2,15 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lumini_chat/models/users.dart';
 
 class AuthMethods {
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  User _userFromFirebaseUser(FirebaseUser firebaseUser) =>
-      firebaseUser != null ? User(userId: firebaseUser.uid) : null;
+  AppUser _userFromFirebaseUser(User firebaseUser) =>
+      firebaseUser != null ? AppUser(userId: firebaseUser.uid) : null;
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult result = await _auth.signInWithEmailAndPassword(
+      UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      FirebaseUser firebaseUser = result.user;
+      User firebaseUser = result.user;
       return _userFromFirebaseUser(firebaseUser);
     } catch (e) {
       print(e.toString());
@@ -19,9 +20,9 @@ class AuthMethods {
 
   Future signUpWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      FirebaseUser firebaseUser = result.user;
+      User firebaseUser = result.user;
       return _userFromFirebaseUser(firebaseUser);
     } catch (e) {
       print(e.toString());
@@ -44,3 +45,5 @@ class AuthMethods {
     }
   }
 }
+
+final AuthMethods authMethods = AuthMethods();
