@@ -29,8 +29,6 @@ class _SearchState extends State<Search> {
   }
 
   Widget userListView() {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
     String emailSearch = searchByUserEmailTextEditingController.text;
 
     if (userSnapshot == null) {
@@ -38,26 +36,20 @@ class _SearchState extends State<Search> {
     } else if (userSnapshot.docs.length == 0) {
       return emailSearch.isEmpty
           ? Container()
-          : Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: screenHeight * 0.1,
-                horizontal: screenWidth * 0.1,
-              ),
+          : Container(
               child: Container(
-                child: Container(
-                  width: screenWidth * 0.7,
-                  alignment: Alignment.topCenter,
-                  child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      'Please provide a registered E-mail.',
-                      style: azSimpleTextStyle(
-                        buildContext: context,
-                      ),
+                alignment: Alignment.center,
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(
+                    'Please provide a registered E-mail.',
+                    style: azSimpleTextStyle(
+                      buildContext: context,
                     ),
                   ),
                 ),
-              ));
+              ),
+            );
     } else {
       return userSnapshot.docs[0].data()["username"].toString() !=
               Constants.currentUser
@@ -76,14 +68,8 @@ class _SearchState extends State<Search> {
                 );
               },
             )
-          : Padding(
-              padding: EdgeInsets.only(
-                top: screenHeight * 0.1,
-                bottom: screenHeight * 0.1,
-                left: screenWidth * 0.1,
-              ),
+          : Center(
               child: Container(
-                alignment: Alignment.topCenter,
                 child: Text(
                   'This email belongs to you.',
                   style: azSimpleTextStyle(
@@ -108,7 +94,7 @@ class _SearchState extends State<Search> {
       "users": users,
       "chatRoomId": chatRoomId
     };
-    
+
     databaseMethods.isRoomDuplicated(invertedChatRoomId).then((val) {
       setState(() {
         chatRoomSnapshot = val;
@@ -146,65 +132,62 @@ class _SearchState extends State<Search> {
     final double screenWidth = MediaQuery.of(buildContext).size.width;
 
     return Padding(
-      padding: EdgeInsets.only(
-        top: screenWidth * 0.02,
-        bottom: screenWidth * 0.02,
-      ),
+      padding: EdgeInsets.only(top: screenHeight * 0.03),
       child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
-        ),
-        padding: EdgeInsets.symmetric(
-            vertical: screenHeight * 0.03, horizontal: screenWidth * 0.04),
-        height: screenHeight * 0.135,
-        alignment: Alignment.topRight,
-        child: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              SizedBox(
-                width: screenWidth * 0.02,
-              ),
-              Container(
-                width: screenWidth * 0.5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      child: Text(
-                        capitalize(usernameLabel),
-                        style: azSimpleTextStyle(
-                          buildContext: context,
-                          color: Colors.black,
-                          fontSize: 20.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 4,
+              child: Padding(
+                padding: EdgeInsets.only(right: screenWidth*0.03),
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical:screenHeight*0.03,horizontal: screenWidth*0.03),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        child: Text(
+                          capitalize(usernameLabel),
+                          style: azSimpleTextStyle(
+                            buildContext: context,
+                            color: Colors.blueGrey,
+                            fontSize: 20.0,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    SizedBox(
-                      height: screenHeight * 0.005,
-                    ),
-                    Container(
-                      child: Text(
-                        userEmailLabel,
-                        style: azSimpleTextStyle(
-                          buildContext: context,
-                          color: Colors.black,
-                          fontSize: 16,
+                      Container(
+                        child: Text(
+                          userEmailLabel,
+                          style: azSimpleTextStyle(
+                            buildContext: context,
+                            color: Colors.blueGrey,
+                            fontSize: 16,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: screenWidth * 0.03),
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
@@ -225,8 +208,8 @@ class _SearchState extends State<Search> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -246,164 +229,165 @@ class _SearchState extends State<Search> {
         return FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                size: 30,
-                color: Theme.of(context).accentColor,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-          centerTitle: true,
-          title: Padding(
-            padding: EdgeInsets.only(
-              top: screenHeight * 0.01,
-              bottom: screenHeight * 0.02,
-              left: screenWidth * 0.01,
-            ),
-            child: FittedBox(
-              fit: BoxFit.fill,
-              child: Text(
-                'Search',
-                style: TextStyle(
+          appBar: AppBar(
+            elevation: 0.0,
+            leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 30,
                   color: Theme.of(context).accentColor,
-                  fontSize: 28.0,
-                  letterSpacing: 5,
-                  fontFamily: 'Lobster',
-                  fontWeight: FontWeight.bold,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            centerTitle: true,
+            title: Padding(
+              padding: EdgeInsets.only(
+                top: screenHeight * 0.01,
+                bottom: screenHeight * 0.02,
+                left: screenWidth * 0.01,
+              ),
+              child: FittedBox(
+                fit: BoxFit.fill,
+                child: Text(
+                  'Search',
+                  style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                    fontSize: 28.0,
+                    letterSpacing: 5,
+                    fontFamily: 'Lobster',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        body: Padding(
-          padding: EdgeInsets.only(bottom: 0.0),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  right: 0.0,
-                  left: screenWidth * 0.06,
-                  top: screenHeight * 0.01),
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  alignment: Alignment.topLeft,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).accentColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      bottomLeft: Radius.circular(30),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                        height: screenHeight * 0.02,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: screenHeight * 0.02,
-                            right: 0.0,
-                            left: screenHeight * 0.03),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                bottomLeft: Radius.circular(20),
-                              )),
-                          padding: EdgeInsets.only(
-                            top: screenHeight * 0.011,
-                            bottom: screenHeight * 0.011,
-                            right: screenWidth * 0.02,
-                            left: screenWidth * 0.04,
-                          ),
-                          height: screenHeight * 0.1,
-                          alignment: Alignment.topRight,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller:
-                                      searchByUserEmailTextEditingController,
-                                  decoration: azTextFieldInputDecoration(
-                                    // hintText: 'Search by username',
-                                    hintText: 'Search by email',
-                                    buildContext: context,
-                                    underlineColor: Colors.grey,
-                                    disableBorder: true,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: screenWidth * 0.04,
-                              ),
-                              ClipOval(
-                                child: Material(
-                                  color: Theme.of(context)
-                                      .primaryColor, // button color
-                                  child: InkWell(
-                                    splashColor: Theme.of(context)
-                                        .accentColor, // inkwell color
-                                    child: SizedBox(
-                                      width: screenWidth * 0.12,
-                                      height: screenWidth * 0.12,
-                                      child: Icon(
-                                        Icons.search,
-                                        color: Theme.of(context).accentColor,
-                                        size: 40,
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      initiateSearch();
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          body: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.04,
+                    vertical: screenHeight * 0.01),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: searchByUserEmailTextEditingController,
+                        decoration: azTextFieldInputDecoration(
+                          hintText: 'Search by email',
+                          buildContext: context,
+                          underlineColor: Colors.grey,
+                          disableBorder: true,
                         ),
                       ),
-                      SizedBox(
-                        height: screenHeight * 0.02,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: screenHeight * 0.02),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                              topLeft: Radius.circular(20),
-                              bottomLeft: Radius.circular(20),
+                    ),
+                    SizedBox(
+                      width: screenWidth * 0.02,
+                    ),
+                    ClipOval(
+                      child: Material(
+                        color: Theme.of(context).primaryColor, // button color
+                        child: InkWell(
+                          splashColor:
+                              Theme.of(context).accentColor, // inkwell color
+                          child: SizedBox(
+                            width: screenWidth * 0.12,
+                            height: screenWidth * 0.12,
+                            child: Icon(
+                              Icons.search,
+                              color: Theme.of(context).accentColor,
+                              size: 40,
                             ),
                           ),
-                          padding: EdgeInsets.only(
-                            top: screenHeight * 0.011,
-                            bottom: 0.0,
-                            right: screenWidth * 0.02,
-                            left: screenWidth * 0.0,
-                          ),
-                          height: screenHeight * 0.65,
-                          // alignment: Alignment.topRight,
-                          child: userListView(),
+                          onTap: () {
+                            initiateSearch();
+                          },
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).accentColor,
+                  ),
+                  child: userListView(),
+                ),
+              ),
+            ],
+          )
+
+          // Container(
+          //   decoration: BoxDecoration(
+          //     color: Theme.of(context).accentColor,
+          //     borderRadius: BorderRadius.only(
+          //       topLeft: Radius.circular(30),
+          //       topRight: Radius.circular(30),
+          //     ),
+          //   ),
+          //   child: SingleChildScrollView(
+          //     child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.start,
+          //       mainAxisSize: MainAxisSize.max,
+          //       children: [
+          //         Padding(
+          //           padding: EdgeInsets.only(
+          //             top: 0.0,
+          //           ),
+          //           child: Container(
+          //             decoration: BoxDecoration(
+          //               color: Colors.white,
+          //               borderRadius: BorderRadius.only(
+          //                 topLeft: Radius.circular(30),
+          //                 topRight: Radius.circular(30),
+          //               ),
+          //             ),
+          //             padding: EdgeInsets.only(
+          //               top: screenHeight * 0.011,
+          //               bottom: screenHeight * 0.011,
+          //               right: screenWidth * 0.02,
+          //               left: screenWidth * 0.04,
+          //             ),
+          //             height: screenHeight * 0.1,
+          //             alignment: Alignment.topRight,
+          //             child: azSearchBar(
+          //               buildContext: context,
+          //               searchByUserEmailTextEditingController:
+          //                   searchByUserEmailTextEditingController,
+          //               searchFunction: initiateSearch(),
+          //             ),
+          //           ),
+          //         ),
+          //         Container(
+          //           decoration: BoxDecoration(
+          //             color: Colors.blue,
+          //             borderRadius: BorderRadius.only(
+          //               topRight: Radius.circular(20),
+          //               bottomRight: Radius.circular(20),
+          //               topLeft: Radius.circular(20),
+          //               bottomLeft: Radius.circular(20),
+          //             ),
+          //           ),
+          //           padding: EdgeInsets.only(
+          //             top: screenHeight * 0.011,
+          //             bottom: 0.0,
+          //             right: screenWidth * 0.02,
+          //             left: screenWidth * 0.0,
+          //           ),
+          //           alignment: Alignment.center,
+          //           child: userListView(),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           ),
-        ),
-      ),
     );
   }
 }
