@@ -9,15 +9,15 @@ import 'package:lumini_chat/screens/intro_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(LuminaChat());
 }
 
-class MyApp extends StatefulWidget {
+class LuminaChat extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _LuminaChatState createState() => _LuminaChatState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _LuminaChatState extends State<LuminaChat> {
   bool isLoggedIn;
   @override
   void initState() {
