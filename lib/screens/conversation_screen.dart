@@ -24,6 +24,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
       Map<String, dynamic> messageMap = {
         "Message": messageBodyTextController.text,
         "SentBy": Constants.currentUser,
+        "TimeSent": setTimeNow(),
         "Time": DateTime.now().millisecondsSinceEpoch,
         "Liked": false,
       };
@@ -68,7 +69,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 final liked = snapshot.data.documents[index].data()["Liked"];
                 final isMe = snapshot.data.documents[index].data()["SentBy"] ==
                     Constants.currentUser;
-                final time = getReadableTimeAmPmFromTimeStamp(snapshot.data.documents[index].data()["Time"].toInt());
+                final time = snapshot.data.documents[index].data()["TimeSent"];
                 return MessageTile(
                   isMe: isMe,
                   liked: liked,

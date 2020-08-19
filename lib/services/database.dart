@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lumini_chat/helper/constants.dart';
 
 class DatabaseMethods {
   getUserByUsername(usernameSearchString) async {
@@ -32,7 +33,8 @@ class DatabaseMethods {
   isRoomDuplicated(String invertedChatRoomId) {
     return FirebaseFirestore.instance
         .collection("ChatRooms")
-        .where("chatRoomId", isEqualTo: invertedChatRoomId).get()
+        .where("chatRoomId", isEqualTo: invertedChatRoomId)
+        .get()
         .catchError((e) {
       print(e.toString());
     });
@@ -57,5 +59,22 @@ class DatabaseMethods {
         .collection('Chats')
         .orderBy('Time', descending: true)
         .snapshots();
+  }
+
+  getUserChats(String itIsMyName) {
+    return  FirebaseFirestore.instance
+        .collection("ChatRooms")
+        .where('users', arrayContains: itIsMyName)
+        .snapshots();
+  }
+
+  getFavoriteUsers() {
+    return FirebaseFirestore.instance
+        .collection('Users')
+        .where("username", isEqualTo: Constants.currentUser)
+        .get()
+        .catchError((e) {
+      print('${e.toString()}');
+    });
   }
 }
