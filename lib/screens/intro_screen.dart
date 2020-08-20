@@ -49,7 +49,7 @@ class _IntroScreenState extends State<IntroScreen> {
             ignoreUserGestureWhileAnimating: true,
             enableSlideIcon: true,
             positionSlideIcon: 0.5,
-            enableLoop: true,
+            enableLoop: false,
           ),
           Align(
             alignment: Alignment.topRight,
