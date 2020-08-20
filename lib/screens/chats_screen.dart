@@ -137,92 +137,104 @@ class ChatRoomsTile extends StatelessWidget {
     return Column(
       children: [
         Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Flexible(
-                fit: FlexFit.loose,
-                flex: 3,
-                child: Padding(
-                  padding: EdgeInsets.only(left: screenWidth * 0.03),
-                  child: Container(
-                    height: screenWidth * 0.12,
-                    width: screenWidth * 0.12,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).accentColor,
-                      borderRadius: BorderRadius.circular(screenWidth * 0.12),
-                    ),
-                    child: Text(
-                      capitalize(userName.substring(0, 1)),
-                      style: azSimpleTextStyle(
-                        buildContext: context,
-                        color: Colors.red,
-                        fontSize: 20.0,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ConversationScreen(
+                            otherUserInChat: userName,
+                            chatRoomId: chatRoomId,
+                          )));
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Flexible(
+                  fit: FlexFit.loose,
+                  flex: 3,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: screenWidth * 0.03),
+                    child: Container(
+                      height: screenWidth * 0.12,
+                      width: screenWidth * 0.12,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).accentColor,
+                        borderRadius: BorderRadius.circular(screenWidth * 0.12),
                       ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-              ),
-              Flexible(
-                fit: FlexFit.tight,
-                flex: 8,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                      vertical: screenHeight * 0.01,
-                      horizontal: screenWidth * 0.02),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Container(
-                    child: Text(
-                      capitalize(userName),
-                      style: azSimpleTextStyle(
-                        buildContext: context,
-                        color: Colors.blueGrey,
-                        fontSize: 18.0,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-              ),
-              Flexible(
-                fit: FlexFit.tight,
-                flex: 4,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side:
-                            BorderSide(color: Theme.of(context).primaryColor)),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ConversationScreen(
-                                    otherUserInChat: userName,
-                                    chatRoomId: chatRoomId,
-                                  )));
-                    },
-                    color: Theme.of(context).primaryColor,
-                    child: FittedBox(
-                      fit: BoxFit.fitWidth,
                       child: Text(
-                        "Message".toUpperCase(),
+                        capitalize(userName.substring(0, 1)),
                         style: azSimpleTextStyle(
                           buildContext: context,
-                          color: Theme.of(context).accentColor,
+                          color: Colors.red,
+                          fontSize: 20.0,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 8,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        vertical: screenHeight * 0.01,
+                        horizontal: screenWidth * 0.02),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Container(
+                      child: Text(
+                        capitalize(userName),
+                        style: azSimpleTextStyle(
+                          buildContext: context,
+                          color: Colors.blueGrey,
+                          fontSize: 18.0,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 4,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(
+                              color: Theme.of(context).primaryColor)),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ConversationScreen(
+                                      otherUserInChat: userName,
+                                      chatRoomId: chatRoomId,
+                                    )));
+                      },
+                      color: Theme.of(context).primaryColor,
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(
+                          "Message".toUpperCase(),
+                          style: azSimpleTextStyle(
+                            buildContext: context,
+                            color: Theme.of(context).accentColor,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         Divider(),
