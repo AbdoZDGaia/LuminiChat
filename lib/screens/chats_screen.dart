@@ -28,12 +28,13 @@ class _ChatRoomState extends State<ChatRoom> {
                 itemCount: snapshot.data.documents.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
+                  String usersInvolved =
+                      snapshot.data.documents[index].data()['chatRoomId'];
+                  List<String> userSplitList = usersInvolved.split("_");
                   return ChatRoomsTile(
-                    userName: snapshot.data.documents[index]
-                        .data()['chatRoomId']
-                        .toString()
-                        .replaceAll("_", "")
-                        .replaceAll(Constants.currentUser, ""),
+                    userName: userSplitList[0] == Constants.currentUser
+                        ? userSplitList[1]
+                        : userSplitList[0],
                     chatRoomId:
                         snapshot.data.documents[index].data()["chatRoomId"],
                   );
