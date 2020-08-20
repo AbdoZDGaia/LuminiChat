@@ -14,6 +14,8 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  bool validUsername = true;
+  bool validEmail = true;
   bool isLoading = false;
   AuthMethods authMethods = new AuthMethods();
   TextEditingController userNameTextEditingController =
@@ -32,37 +34,51 @@ class _SignUpState extends State<SignUp> {
     List<String> userSplitList = username.split(" ");
     List<String> userIndexList = [];
 
-    for (int i = 0; i < userSplitList.length; i++) {
-      for (int y = 1; y < userSplitList[i].length + 1; y++) {
-        userIndexList.add(userSplitList[i].substring(0, y).toLowerCase());
-      }
-    }
-
-    if (formKey.currentState.validate()) {
+    bool isUserValid = await databaseMethods.isUsernameUnique(username);
+    bool isEmailValid = await databaseMethods.isEmailUnique(email);
+    if (!isUserValid) {
       setState(() {
-        isLoading = true;
+        validUsername = false;
       });
-
-      Map<String, dynamic> userMap = {
-        "email": email.toLowerCase(),
-        "passHash": passHash,
-        "username": username,
-        "searchIndex": userIndexList,
-      };
-      await authMethods
-          .signUpWithEmailAndPassword(email, passHash)
-          .then((result) {
-        if (result != null) {
-          databaseMethods.uploadUserInfo(userMap);
-
-          HelperFunctions.setIsUserLoggedInSharedPreferences(true);
-          HelperFunctions.setLoggedInUserNameSharePreferences(username);
-          HelperFunctions.setLoggedInUserEmailSharePreferences(email);
-
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => ChatRoom()));
+    }
+    if (!isEmailValid) {
+      setState(() {
+        validEmail = false;
+      });
+    }
+    if (isEmailValid && isUserValid) {
+      for (int i = 0; i < userSplitList.length; i++) {
+        for (int y = 1; y < userSplitList[i].length + 1; y++) {
+          userIndexList.add(userSplitList[i].substring(0, y).toLowerCase());
         }
-      });
+      }
+
+      if (formKey.currentState.validate()) {
+        setState(() {
+          isLoading = true;
+        });
+
+        Map<String, dynamic> userMap = {
+          "email": email.toLowerCase(),
+          "passHash": passHash,
+          "username": username,
+          "searchIndex": userIndexList,
+        };
+        await authMethods
+            .signUpWithEmailAndPassword(email, passHash)
+            .then((result) {
+          if (result != null) {
+            databaseMethods.uploadUserInfo(userMap);
+
+            HelperFunctions.setIsUserLoggedInSharedPreferences(true);
+            HelperFunctions.setLoggedInUserNameSharePreferences(username);
+            HelperFunctions.setLoggedInUserEmailSharePreferences(email);
+
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => ChatRoom()));
+          }
+        });
+      }
     }
   }
 
@@ -118,6 +134,11 @@ class _SignUpState extends State<SignUp> {
                                         ? 'Please enter a valid username'
                                         : null;
                                   },
+                                  onChanged: (val) {
+                                    setState(() {
+                                      validUsername = true;
+                                    });
+                                  },
                                   controller: userNameTextEditingController,
                                   style: azSimpleTextStyle(
                                       buildContext: context, italic: true),
@@ -127,10 +148,33 @@ class _SignUpState extends State<SignUp> {
                                     hintText: 'username',
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 8.0,
-                                ),
+                                validUsername
+                                    ? SizedBox.shrink()
+                                    : Padding(
+                                        padding: EdgeInsets.only(
+                                          top: screenHeight * 0.01,
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                              top: screenHeight * 0.003,
+                                              left: screenWidth * 0.02),
+                                          alignment: Alignment.topLeft,
+                                          height: screenHeight * 0.04,
+                                          child: Text(
+                                            'Invalid username',
+                                            style: azSimpleTextStyle(
+                                                buildContext: context,
+                                                color: Colors.red,
+                                                fontSize: 14),
+                                          ),
+                                        ),
+                                      ),
                                 TextFormField(
+                                  onChanged: (val) {
+                                    setState(() {
+                                      validEmail = true;
+                                    });
+                                  },
                                   validator: (val) {
                                     return RegExp(
                                                 r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
@@ -147,6 +191,27 @@ class _SignUpState extends State<SignUp> {
                                     hintText: 'email',
                                   ),
                                 ),
+                                validEmail
+                                    ? SizedBox.shrink()
+                                    : Padding(
+                                        padding: EdgeInsets.only(
+                                          top: screenHeight * 0.01,
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                              top: screenHeight * 0.003,
+                                              left: screenWidth * 0.02),
+                                          alignment: Alignment.topLeft,
+                                          height: screenHeight * 0.04,
+                                          child: Text(
+                                            'Email is already registered',
+                                            style: azSimpleTextStyle(
+                                                buildContext: context,
+                                                color: Colors.red,
+                                                fontSize: 14),
+                                          ),
+                                        ),
+                                      ),
                                 TextFormField(
                                   obscureText: true,
                                   validator: (val) {
@@ -170,7 +235,7 @@ class _SignUpState extends State<SignUp> {
                             height: 20.0,
                           ),
                           GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               signMeUp();
                             },
                             child: Container(

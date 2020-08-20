@@ -16,6 +16,22 @@ class DatabaseMethods {
         .get();
   }
 
+  isUsernameUnique(username) async {
+    final result = await FirebaseFirestore.instance
+        .collection("Users")
+        .where("username", isEqualTo: username.toString().toLowerCase())
+        .get();
+    return result.docs.isEmpty;
+  }
+
+  isEmailUnique(email) async {
+    final result = await FirebaseFirestore.instance
+        .collection("Users")
+        .where("email", isEqualTo: email.toString().toLowerCase().trimRight())
+        .get();
+    return result.docs.isEmpty;
+  }
+
   uploadUserInfo(userMap) {
     FirebaseFirestore.instance.collection("Users").add(userMap);
   }
@@ -62,7 +78,7 @@ class DatabaseMethods {
   }
 
   getUserChats(String itIsMyName) {
-    return  FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection("ChatRooms")
         .where('users', arrayContains: itIsMyName)
         .snapshots();
